@@ -24,5 +24,8 @@ from django.views.generic import TemplateView
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-    path("hoge/", TemplateView.as_view(template_name='hoge.html'), name="hoge")
+    path("hoge/", TemplateView.as_view(template_name='hoge.html'), name="hoge"),
+
+    # OpenAI API
+    path('request_ai_api/', core_views.request_ai_api, name="request_ai_api")
 ]

@@ -10,7 +10,24 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
+import os
+import environ
 from pathlib import Path
+
+
+# instanceを作成
+env = environ.Env(
+    # 初期値を設定
+    DEBUG=(bool, False)
+)
+
+# .envファイルのパスを指定するためにBASE_DIRをmanage.pyのある階層に指定
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# manage.pyのある階層にある.envを読み込む
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+
+AI_API_KEY = env('AI_API_KEY')
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent

@@ -1,2 +1,4 @@
-Django==5.0 
+Django==5.0
 mysqlclient
+django-environ
+openai
