@@ -10,12 +10,24 @@ services:
     command: mysqld --character-set-server=utf8 --collation-server=utf8_unicode_ci
     ports:
       - "3306:3306"
+
   web:
-    build: .       
-    command: python3 manage.py runserver 0.0.0.0:8000 
+    build: 
+      # ビルドコンテナはカレントディレクトリ
+      context: .
+      dockerfile: dockerfiles/django/Dockerfile
+    command: gunicorn djangopj.wsgi:application --config /code/dockerfiles/django/gunicorn_config.py
     volumes:               
       - .:/code
     ports:                  
       - "8000:8000"
     depends_on:             
       - db
+
+  nginx:
+    build:
+      context: .
+      dockerfile: dockerfiles/nginx/Dockerfile
+    image: b-team_nginx
+    ports:
+      - 80:80
