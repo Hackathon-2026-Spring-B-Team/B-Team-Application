@@ -16,6 +16,7 @@ services:
       # ビルドコンテナはカレントディレクトリ
       context: .
       dockerfile: dockerfiles/django/Dockerfile
+    # gunicorn起動 gunicornの設定を適応
     command: gunicorn djangopj.wsgi:application --config /code/dockerfiles/django/gunicorn_config.py
     volumes:               
       - .:/code
@@ -31,3 +32,5 @@ services:
     image: b-team_nginx
     ports:
       - 80:80
+    depends_on:
+      - web
