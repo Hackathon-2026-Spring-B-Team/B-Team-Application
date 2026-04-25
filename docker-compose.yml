@@ -6,7 +6,7 @@ services:
       MYSQL_DATABASE: django-db
       MYSQL_USER: django
       MYSQL_PASSWORD: django
-      TZ: 'Asia/Tokyo'
+      TZ: Asia/Tokyo
     command: mysqld --character-set-server=utf8 --collation-server=utf8_unicode_ci
     ports:
       - "3306:3306"
@@ -18,10 +18,13 @@ services:
       dockerfile: dockerfiles/django/Dockerfile
     # gunicorn起動 gunicornの設定を適応
     command: gunicorn djangopj.wsgi:application --config /code/dockerfiles/django/gunicorn_config.py
+    environment:
+      TZ: Asia/Tokyo
     volumes:               
       - .:/code
-    ports:                  
-      - "8000:8000"
+    # コンテナ内でポート番号8000使用を宣言
+    expose:
+      - "8000"
     depends_on:             
       - db
 
@@ -30,6 +33,8 @@ services:
       context: .
       dockerfile: dockerfiles/nginx/Dockerfile
     image: b-team_nginx
+    environment:
+      TZ: Asia/Tokyo
     ports:
       - 80:80
     depends_on:
