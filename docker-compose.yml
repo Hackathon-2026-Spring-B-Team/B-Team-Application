@@ -27,6 +27,8 @@ services:
       - "8000"
     depends_on:             
       - db
+    # 手動停止以外で停止した場合コンテナ再起動
+    restart: unless-stopped
 
   nginx:
     build:
@@ -39,3 +41,5 @@ services:
       - 80:80
     depends_on:
       - web
+    # 手動停止以外で停止した場合コンテナ再起動
+    restart: unless-stopped

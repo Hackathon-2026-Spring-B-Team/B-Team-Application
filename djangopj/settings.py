@@ -133,3 +133,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "dashboard"
 LOGOUT_REDIRECT_URL = "login"
+
+# セキュリティヘッダー設定
+# クリックジャンキング対策
+X_FRAME_OPTIONS = "DENY"
+# MIMEスニッフィング対策
+SECURE_CONTENT_TYPE_NOSNIFF = True
