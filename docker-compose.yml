@@ -29,6 +29,12 @@ services:
       - db
     # 手動停止以外で停止した場合コンテナ再起動
     restart: unless-stopped
+    # ロギングドライバ
+    logging:
+      driver: local
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   nginx:
     build:
@@ -43,3 +49,9 @@ services:
       - web
     # 手動停止以外で停止した場合コンテナ再起動
     restart: unless-stopped
+    # ロギングドライバ
+    logging:
+      driver: local
+      options:
+        max-size: "10m"
+        max-file: "3"
