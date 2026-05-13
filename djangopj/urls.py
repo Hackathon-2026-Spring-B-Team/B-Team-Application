@@ -19,10 +19,17 @@ from django.urls import path
 from core import views as core_views
 from django.contrib.auth import views as auth_views
 from django.views.generic import TemplateView
+from django.http import HttpResponse # AWS ALBヘルスチェック用に追加
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
 
     path("hoge/", TemplateView.as_view(template_name='hoge.html'), name="hoge")
+
+    # ALBヘルスチェック用パス
+    path("health/", health)
 ]
+
+def health(request):
+    return HttpResponse("OK")
