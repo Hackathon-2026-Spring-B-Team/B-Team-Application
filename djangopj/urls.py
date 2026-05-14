@@ -19,11 +19,8 @@ from django.urls import path
 from core import views as core_views
 from django.contrib.auth import views as auth_views
 from django.views.generic import TemplateView
-from django.http import HttpResponse
 
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-    path("hoge/", TemplateView.as_view(template_name='hoge.html'), name="hoge"),
-    
-    path("health/", lambda request: HttpResponse("OK"))]
+    path("hoge/", TemplateView.as_view(template_name='hoge.html'), name="hoge")]
