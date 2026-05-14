@@ -31,10 +31,11 @@ services:
     restart: unless-stopped
     # ロギングドライバ
     logging:
-      driver: local
+      driver: awslogs
       options:
-        max-size: "10m"
-        max-file: "3"
+        awslogs-region: ap-northeast-1
+        awslogs-group: HackathonB-Team
+        awslogs-stream: web
 
   nginx:
     build:
@@ -51,7 +52,8 @@ services:
     restart: unless-stopped
     # ロギングドライバ
     logging:
-      driver: local
+      driver: awslogs
       options:
-        max-size: "10m"
-        max-file: "3"
+        awslogs-region: ap-northeast-1
+        awslogs-group: HackathonB-Team
+        awslogs-stream: nginx
