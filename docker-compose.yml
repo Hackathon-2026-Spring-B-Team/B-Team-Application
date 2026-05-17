@@ -4,17 +4,20 @@ services:
       # ビルドコンテナはカレントディレクトリ
       context: .
       dockerfile: dockerfiles/django/Dockerfile
-    # gunicorn起動 gunicornの設定を適応
-    command: gunicorn djangopj.wsgi:application --config /code/dockerfiles/django/gunicorn_config.py
+    # マイグレーション実行、静的ファイル収集、gunicorn起動 gunicornの設定を適応
+    command: >
+      sh -c "
+      python manage.py migrate &&
+      python manage.py collectstatic --noinput &&
+      gunicorn djangopj.wsgi:application --config /code/dockerfiles/django/gunicorn_config.py"
     environment:
       TZ: Asia/Tokyo
-    volumes:               
-      - .:/code
+    # 本番削除
+    env_file:
+      - .env
     # コンテナ内でポート番号8000使用を宣言
     expose:
       - "8000"
-    depends_on:             
-      - db
     # 手動停止以外で停止した場合コンテナ再起動
     restart: unless-stopped
     # ロギングドライバ
@@ -23,7 +26,7 @@ services:
       options:
         awslogs-region: ap-northeast-1
         awslogs-group: HackathonB-Team
-        tag: "{{.imageName}}.{{.Name}}.{{.FullID}}"
+        tag: "{{.Name}}.{{.FullID}}"
 
   nginx:
     build:
@@ -44,4 +47,4 @@ services:
       options:
         awslogs-region: ap-northeast-1
         awslogs-group: HackathonB-Team
-        tag: "{{.imageName}}.{{.Name}}.{{.FullID}}"
+        tag: "{{.Name}}.{{.FullID}}"
