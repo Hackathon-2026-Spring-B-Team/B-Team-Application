@@ -1,0 +1,42 @@
+{% extends 'base_createplan.html' %}
+
+{% block title %}情報入力{% endblock %}
+
+{% block content %}
+<!-- URLの設定お願いします -->
+<form action="" method="POST" class="flex-1 flex flex-col">
+
+    {% csrf_token %}
+
+    <!-- 画面上部説明-->
+    <div class="p-8 text-white flex-col justify-center">
+        <h1 class="text-2xl font-bold mb-6">情報入力</h1>
+        <div>試験や資格の情報を入力してください<br>あなたを合格に導くプランを作成します</div>
+    </div>
+
+    <!-- 画面下部フォームカード -->
+    <div class="bg-white p-8 space-y-4 rounded-t-3xl flex-1 flex flex-col justify-center">
+        
+        <!-- フォーム部分 -->
+        <div>
+            <label class="block text-sm font-medium mb-1">資格名</label>
+            <input type="text" name="license_name" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+        <div>
+            <label class="block text-sm font-medium mb-1">受験予定日</label>
+            <input type="date" name="test_date" class="w-full p-3 border rounded-lg">
+        </div>
+        <div>
+            <label class="block text-sm font-medium mb-1">1日の勉強時間目安（単位:時間）</label>
+            <input type="number" name="study_hours" class="w-full p-3 border rounded-lg">
+        </div>
+
+        <!-- ボタン部分 -->
+        <button type="submit" class="w-full bg-[#116329] text-white py-4 rounded-xl font-bold mt-8">
+            学習プラン生成
+        </button>
+
+    </div>
+</form>
+{% endblock %}
+
