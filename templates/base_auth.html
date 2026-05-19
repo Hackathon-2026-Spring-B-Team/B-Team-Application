@@ -1,0 +1,44 @@
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- フォントの追加 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=BIZ+UDGothic:wght@400;700&display=swap" rel="stylesheet">
+    
+    <title>{% block title %}{% endblock %} | METIS</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- カラー設定 -->
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              'green': {
+                400: '#2DA44E',
+                600: '#116329',
+                900: '#002D11',
+              },
+              'gray': {
+                50: '#F6F7F6',
+                300: '#A0A8A2',
+                600: '#49504B',
+              },
+              'negative-red': '#CF222E'
+            },
+            fontFamily: {
+              sans: ['"BIZ UDPGothic"', 'sans-serif'],
+            },
+          },
+        },
+      }
+    </script>
+  </head>
+    <body>
+      {% block content %}{% endblock %}
+    </body>
+</html>
