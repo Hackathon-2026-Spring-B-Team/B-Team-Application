@@ -15,32 +15,63 @@ word ='''
 出力形式例:\
 
 {
-  "tasks": [
+  "plans": [
     {
-      "id": "1",
-      "title": "情報の基礎理論",
-      "genre": "基礎理論",
-			"start": "2026-04-10",
-			"end": "2026-04-12",
+      "index": "1",
+      "planname": "短期集中プラン",
+      "tasks": [
+        {
+          "name": "G検定の受験範囲を確認する",
+          "genre": "計画・準備",
+          "task_start_date": "2026-05-01",
+          "task_end_date": "2026-05-01"
+        },
+        ...
+      ]
     },
     {
-      "id": "2",
-      "title": "アルゴリズムとプログラミング",
-      "genre": "基礎理論",
-			"start": "2026-04-13",
-			"end": "2026-04-15",
+      "index": "2",
+      "planname": "バランス重視プラン",
+      "tasks": [ ... ]
     },
-    ...
+    {
+      "index": "3",
+      "planname": "ゆったり進めるプラン",
+      "tasks": [ ... ]
+    }
   ]
 }
 
 
 入力:\
-goal: "基礎情報技術者試験"\
-deadline: 2026/11/01\
-daily_available_minutes: 120\
+plan_name(プラン名): "G検定"\
+plan_start_date（プラン開始日）: 2026/05/01\
+plan_end_date（受験日）: 2026/07/03\
+daily_available_minutes（1日に学習可能時間（分））: 60\
 '''
 
 # goal: {{goal}}\
 # deadline: {{deadline}}\
 # daily_available_minutes: {{daily_available_minutes}}\
+
+
+
+# {
+#   "tasks": [
+#     {
+#       "id": "1",
+#       "title": "情報の基礎理論",
+#       "genre": "基礎理論",
+# 			"task_start_date": "2026-04-10",
+# 			"task_end_date": "2026-04-12",
+#     },
+#     {
+#       "id": "2",
+#       "title": "アルゴリズムとプログラミング",
+#       "genre": "基礎理論",
+# 			"task_start_date": "2026-04-13",
+# 			"task_end_date": "2026-04-15",
+#     },
+#     ...
+#   ]
+# }
