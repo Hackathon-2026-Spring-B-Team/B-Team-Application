@@ -24,5 +24,17 @@ from django.views.generic import TemplateView
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-    path("hoge/", TemplateView.as_view(template_name='hoge.html'), name="hoge")
+    path("hoge/", TemplateView.as_view(template_name='hoge.html'), name="hoge"),
+    path("form/", TemplateView.as_view(template_name='form.html'), name="form"),
+    #path("select/", TemplateView.as_view(template_name='select.html'), name="select"),
+    path("home/", core_views.home, name="home"),
+    #path("login/", TemplateView.as_view(template_name='login.html'), name="login"),
+    #path("signup/", TemplateView.as_view(template_name='signup.html'), name="signup"),
+    path("login/", core_views.signin, name="signin"), # loginという命名だとdjangoの予約語loginと被る
+    path("signup/", core_views.signup, name="signup"),
+    path("logout/", core_views.signout, name="signout"),
+    path("select/", core_views.select, name="select"),
+
+    # OpenAI API
+    path('request_ai_api/', core_views.request_ai_api, name="request_ai_api"),
 ]
