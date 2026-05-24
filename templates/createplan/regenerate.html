@@ -4,7 +4,7 @@
 
 {% block content %}
 
-<form action="" method="POST" class="flex-1 flex flex-col overflow-hidden">
+<form action="{% url 'regenerate' %}" method="POST" class="flex-1 flex flex-col overflow-hidden">
 
   <!-- 画面上部説明 -->
   <div class="h-[30vh] p-8 pb-4 text-white flex flex-col items-center justify-center shrink-0">
