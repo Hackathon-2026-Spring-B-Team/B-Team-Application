@@ -12,7 +12,6 @@ services:
       gunicorn djangopj.wsgi:application --config /code/dockerfiles/django/gunicorn_config.py"
     environment:
       TZ: Asia/Tokyo
-    # 本番削除
     env_file:
       - .env
     # コンテナ内でポート番号8000使用を宣言
