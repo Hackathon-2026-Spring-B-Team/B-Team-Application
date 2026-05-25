@@ -104,7 +104,7 @@ def signup(request):
             login(request, user)
             return redirect("hoge") 
 
-    return render(request, "signup.html")
+    return render(request, "auth/signup.html")
 
 
 def signin(request):
@@ -130,7 +130,7 @@ def signin(request):
         else:
             messages.error(request, "ユーザー名またはパスワードが違います。")
 
-    return render(request, "login.html")
+    return render(request, "auth/login.html")
 
 
 def signout(request):
@@ -167,7 +167,7 @@ def select(request):
                 request.session['selected_plan'] = selected_plan
             except json.JSONDecodeError:
                 request.session['selected_plan'] = None
-        return redirect('home')
+        return redirect('createploan/home')
 
     sample_path = os.path.join(settings.BASE_DIR, 'response_sample.json')
     plans = []
@@ -217,6 +217,6 @@ def select(request):
     except FileNotFoundError:
         plans = []
 
-    return render(request, 'select.html', {
+    return render(request, 'createplan/select.html', {
         'plans': plans,
     })
