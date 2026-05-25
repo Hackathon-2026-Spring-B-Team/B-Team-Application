@@ -1,0 +1,44 @@
+{% extends 'createplan/base.html' %}
+
+{% block title %}プラン再生成{% endblock %}
+
+{% block content %}
+
+<form action="{% url 'regenerate' %}" method="POST" class="flex-1 flex flex-col overflow-hidden">
+
+  <!-- 画面上部説明 -->
+  <div class="h-[30vh] p-8 pb-4 text-white flex flex-col items-center justify-center shrink-0">
+      
+    <!-- ロゴ -->
+    <div class="w-1/4 mb-4">
+      <img src="{% static 'images/logo_white.png' %}" alt="METIS Logo" class="w-full h-auto">
+    </div>
+    
+    <!-- 説明 -->
+    <h1 class="text-2xl font-bold mb-3">再生成</h1>
+    <div class="text-center leading-relaxed text-gray-100 text-sm">
+      さらに細かく調整したい部分を<br>
+      あなたの言葉で教えてください
+    </div>
+
+  </div>
+  
+  <!-- 画面下部カード -->
+  <div class="bg-white p-6 pt-8 rounded-t-3xl flex-1 flex flex-col overflow-hidden shadow-lg">
+      
+    <!-- テキスト入力エリア -->
+    <div class="flex-1 px-1 pb-2 flex flex-col">
+      <textarea name="feedback" class="flex-1 w-full p-5 bg-gray-50 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-green-600 focus:bg-white transition-colors text-sm resize-none leading-relaxed" placeholder="例：計算問題をもっと増やしたい"></textarea>
+    </div>
+    
+    <!-- ボタン部分 -->
+    <div class="shrink-0 pt-4 pb-2 w-full">
+      <button type="submit" class="w-full bg-green-600 active:bg-green-700 transition-colors text-white py-4 rounded-xl font-bold text-center text-sm shadow-md">
+        再生成
+      </button>
+    </div>
+
+  </div>
+</form>
+
+{% endblock %}
