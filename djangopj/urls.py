@@ -25,10 +25,11 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 
     path("hoge/", TemplateView.as_view(template_name='hoge.html'), name="hoge"),
-    path("form/", TemplateView.as_view(template_name='form.html'), name="form"),
-    path("select/", TemplateView.as_view(template_name='select.html'), name="select"),
-    path("regenerate/", TemplateView.as_view(template_name='regenerate.html'), name="regenerate"),
+    path("form/", TemplateView.as_view(template_name='createplan/form.html'), name="form"),
+    path("regenerate/", core_views.regenerate, name="regenerate"),
+    #path("select/", TemplateView.as_view(template_name='select.html'), name="select"),
     path("home/", core_views.home, name="home"),
+    path("chart/", TemplateView.as_view(template_name='dashboard/chart.html'), name="chart"),
     #path("login/", TemplateView.as_view(template_name='login.html'), name="login"),
     #path("signup/", TemplateView.as_view(template_name='signup.html'), name="signup"),
     path("login/", core_views.signin, name="signin"), # loginという命名だとdjangoの予約語loginと被る
