@@ -1,0 +1,163 @@
+{% extends 'main/base.html' %}
+
+{% block title %}プラン詳細{% endblock %}
+
+{% block planname %}{% endblock %}
+
+{% block content %}
+<!-- 画面遷移用ボタンコンテナ -->
+<div class="flex gap-4 mb-8">
+  <a href="{% url 'plan_table'%}" class="flex-1 bg-green-600 text-white transition-colors py-3 rounded-xl font-bold text-center text-sm shadow-md flex items-center justify-center">
+    ロードマップ
+  </a>
+  <a href="{% url 'plan_table'%}" class="flex-1 bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors py-3 rounded-xl font-bold text-center text-sm shadow-sm flex items-center justify-center">
+    進捗グラフ
+  </a>
+</div>
+
+<h1 class="text-2xl font-bold text-gray-900 mb-5">
+  本日の学習
+</h1>
+
+
+<!-- 本日のタスクカード -->
+<div class="bg-white rounded-xl shadow-md p-4 mb-4 border border-gray-100 text-xs">
+  <a class="block space-y-2 hover:opacity-70 transition" href="{% url 'task_detail' plan.task.task.id %}">
+
+    <!-- タスク名 -->
+    <div class="font-bold text-gray-900 text-base">基礎理論：情報の基礎理論</div>
+
+    <!-- 種類 -->
+    <div class="text-gray-600 flex items-center gap-2">
+      <span class="bg-gray-100 px-2 py-1 rounded font-medium">種類</span>
+      <span>確認・レビュー</span>
+    </div>
+    
+    <!-- 理解度 -->
+    <div class="text-gray-600 flex items-center gap-2">
+      <span class="bg-gray-100 px-2 py-1 rounded font-medium">理解度</span>
+      <span class="text-negative-red font-bold">未実施</span>
+    </div>
+
+    <!-- 期間 -->
+    <div class="text-gray-600 flex items-center gap-2">
+      <span class="bg-gray-100 px-2 py-1 rounded font-medium">期間</span>
+      <span>2026-05-01〜2026-05-01</span>
+    </div>
+
+  </a>
+</div>
+
+<!-- トグル部分 -->
+<div class="mt-8 space-y-4">
+  
+  <!-- 期間別タスクのトグル -->
+  <details class="group bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+
+    <!-- 常時表示の押して開閉する部分 -->
+    <summary class="flex justify-between items-center font-bold p-4 cursor-pointer list-none select-none text-gray-900 bg-gray-50 group-open:bg-white transition-colors">
+      期間別タスク
+      <span class="material-symbols-rounded transition-transform duration-300 group-open:rotate-180 text-gray-400">expand_more</span>
+    </summary>
+    
+    <!-- トグルの中身 -->
+    <div class="p-4 border-t border-gray-100 bg-white">
+
+      <!-- フィルターボタン -->
+      <div class="flex gap-2 overflow-x-auto no-scrollbar mb-4 pb-2 filter-container">
+        <button class="filter-btn px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-colors bg-green-600 text-white" data-target="all">すべて</button>
+        <button class="filter-btn px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-colors bg-white text-gray-600 border border-gray-200" data-target="遅延">遅延</button>
+        <button class="filter-btn px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-colors bg-white text-gray-600 border border-gray-200" data-target="これまで">これまで</button>
+        <button class="filter-btn px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-colors bg-white text-gray-600 border border-gray-200" data-target="これから">これから</button>
+      </div>
+      
+      <!-- カードを表示 -->
+      {% for task in plan.tasks %}
+      <div class="task-card bg-white rounded-xl shadow-md p-4 mb-4 border border-gray-100 text-xs" data-filter-value="わからない">
+        <a class="block space-y-2 hover:opacity-70 transition" href="#">
+
+          <!-- タスク名 -->
+          <div class="font-bold text-gray-900 text-base">{{ task.title }}</div>
+
+          <!-- 種類 -->
+          <div class="text-gray-600 flex items-center gap-2">
+            <span class="bg-gray-100 px-2 py-1 rounded font-medium">種類</span>
+            <span>{{ task.genre }}</span>
+          </div>
+          
+          <!-- 理解度 -->
+          <div class="text-gray-600 flex items-center gap-2">
+            <span class="bg-gray-100 px-2 py-1 rounded font-medium">理解度</span>
+            <span class="text-negative-red font-bold">{{ task.evaluation }}</span>
+          </div>
+
+          <!-- 期間 -->
+          <div class="text-gray-600 flex items-center gap-2">
+            <span class="bg-gray-100 px-2 py-1 rounded font-medium">期間</span>
+            <span>{{ task.task_start_date }}〜{{ task.task_end_date }}</span>
+          </div>
+
+        </a>
+      </div>
+
+    </div>
+  </details>
+
+  <!-- 理解度別タスクのトグル -->
+  <details class="group bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+    
+    <!-- 常時表示のトグル部分 -->
+    <summary class="flex justify-between items-center font-bold p-4 cursor-pointer list-none select-none text-gray-900 bg-gray-50 group-open:bg-white transition-colors">
+      理解度別タスク
+      <span class="material-symbols-rounded transition-transform duration-300 group-open:rotate-180 text-gray-400">expand_more</span>
+    </summary>
+    
+    <!-- トグルの中身 -->
+    <div class="p-4 border-t border-gray-100 bg-white">
+
+      <!-- フィルターボタン -->
+      <div class="flex gap-2 overflow-x-auto no-scrollbar mb-4 pb-2 filter-container">
+        <button class="filter-btn px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-colors bg-green-600 text-white" data-target="all">すべて</button>
+        <button class="filter-btn px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-colors bg-white text-gray-600 border border-gray-200" data-target="わからない">わからない</button>
+        <button class="filter-btn px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-colors bg-white text-gray-600 border border-gray-200" data-target="なんとなく">なんとなく</button>
+        <button class="filter-btn px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-colors bg-white text-gray-600 border border-gray-200" data-target="理解した">理解した</button>
+        <button class="filter-btn px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-colors bg-white text-gray-600 border border-gray-200" data-target="未実施">未実施</button>
+      </div>
+      
+      <!-- カードを表示 -->
+      {% for task in plan.tasks %}
+      <div class="task-card bg-white rounded-xl shadow-md p-4 mb-4 border border-gray-100 text-xs" data-filter-value="わからない">
+        <a class="block space-y-2 hover:opacity-70 transition" href="#">
+
+          <!-- タスク名 -->
+          <div class="font-bold text-gray-900 text-base">{{ task.title }}</div>
+
+          <!-- 種類 -->
+          <div class="text-gray-600 flex items-center gap-2">
+            <span class="bg-gray-100 px-2 py-1 rounded font-medium">種類</span>
+            <span>{{ task.genre }}</span>
+          </div>
+          
+          <!-- 理解度 -->
+          <div class="text-gray-600 flex items-center gap-2">
+            <span class="bg-gray-100 px-2 py-1 rounded font-medium">理解度</span>
+            <span class="text-negative-red font-bold">{{ task.evaluation }}</span>
+          </div>
+
+          <!-- 期間 -->
+          <div class="text-gray-600 flex items-center gap-2">
+            <span class="bg-gray-100 px-2 py-1 rounded font-medium">期間</span>
+            <span>{{ task.task_start_date }}〜{{ task.task_end_date }}</span>
+          </div>
+
+        </a>
+      </div>
+    </div>
+  </details>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+  <script src="{% static 'js/task_filter.js' %}"></script>
+{% endblock %}
