@@ -1,8 +1,10 @@
+{% load static %}
+
 {% extends 'main/base.html' %}
 
 {% block title %}プラン詳細{% endblock %}
 
-{% block planname %}{% endblock %}
+{% block planname %}{{ plan_name }}{% endblock %}
 
 {% block content %}
 <!-- 画面遷移用ボタンコンテナ -->
