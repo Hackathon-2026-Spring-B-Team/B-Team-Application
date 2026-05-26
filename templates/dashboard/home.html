@@ -1,0 +1,54 @@
+{% load static %}
+
+{% extends 'dashboard/base.html' %}
+
+{% block title %}ホーム{% endblock %}
+
+{% block content %}
+
+  <!-- プランがある時表示する -->
+  <h1 class="text-2xl font-bold text-gray-900 mb-5">
+    本日の学習
+  </h1>
+  
+  <!-- プラン名 -->
+  {% for plan in plans %}
+  <a class="flex items-center gap-1 mb-1 text-green-600 font-bold text-lg hover:opacity-70 transition" href="{% url 'plan_table' plan.id %}">
+    <span>{{ plan.plan_name }}</span>
+    <span class="material-symbols-rounded text-2xl">chevron_right</span>
+  </a>
+
+  <!-- タスクカード -->
+  {% for task in plan.tasks %}
+  <div class="bg-white rounded-xl shadow-md p-4 mb-4 border border-gray-100 text-xs">
+      <a class="block space-y-2 hover:opacity-70 transition" href="{% url 'task_detail' plan.task.task.id %}">
+
+        <!-- タスク名 -->
+        <div class="font-bold text-gray-900 text-base">{{ task.title }}</div>
+
+        <!-- 種類 -->
+        <div class="text-gray-600 flex items-center gap-2">
+          <span class="bg-gray-100 px-2 py-1 rounded font-medium">種類</span>
+          <span>{{ task.genre }}</span>
+        </div>
+        
+        <!-- 理解度 -->
+        <div class="text-gray-600 flex items-center gap-2">
+          <span class="bg-gray-100 px-2 py-1 rounded font-medium">理解度</span>
+          <span class="text-negative-red font-bold">未実施</span>
+        </div>
+
+        <!-- 期間 -->
+        <div class="text-gray-600 flex items-center gap-2">
+          <span class="bg-gray-100 px-2 py-1 rounded font-medium">期間</span>
+          <span>{{ task.task_start_date }}〜{{ task.task_end_date }}</span>
+        </div>
+
+      </a>
+  </div>
+  {% endfor %}
+  {% empty %}
+  <h2 class="text-green-600 font-bold text-lg">現在学習中プランがありません</h2>
+  {% endfor %}
+  
+{% endblock %}

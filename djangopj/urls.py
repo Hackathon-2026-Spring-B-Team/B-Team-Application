@@ -28,6 +28,7 @@ urlpatterns = [
     # path("select/", TemplateView.as_view(template_name='select.html'), name="select"),
     path("regenerate/", TemplateView.as_view(template_name='createplan/regenerate.html'), name="regenerate"),
     path("home/", core_views.home, name="home"),
+    path("chart/", TemplateView.as_view(template_name='dashboard/chart.html'), name="chart"),
     #path("login/", TemplateView.as_view(template_name='login.html'), name="login"),
     #path("signup/", TemplateView.as_view(template_name='signup.html'), name="signup"),
     path("login/", core_views.signin, name="signin"), # loginという命名だとdjangoの予約語loginと被る
