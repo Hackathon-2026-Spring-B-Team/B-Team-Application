@@ -68,6 +68,7 @@ class Link(ModelBaseClass):
         blank=False
     )
     url = models.TextField()
+    link_name = models.TextField()
 
     def __str__(self):
         return self.url

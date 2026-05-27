@@ -41,6 +41,7 @@ urlpatterns = [
     path("task_detail/<int:task_id>/", core_views.task_detail, name="task_detail"),
     # path("chart/<int:plan_id>/", core_views.chart, name="chart"),
     path("chart/<int:plan_id>/", TemplateView.as_view(template_name='dashboard/chart.html'), name="chart"),
+    path("link/<int:plan_id>/", core_views.link, name="link"),
 
     # OpenAI API
     path('request_ai_api/', core_views.request_ai_api, name="request_ai_api"),

@@ -10,7 +10,7 @@ from django.conf import settings
 from openai import OpenAI
 import core.prompt as Prompt
 import json
-from core.models import Task, Plan
+from core.models import Task, Plan, Link
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
@@ -414,6 +414,14 @@ async def chart(request, plan_id):
     return JsonResponse({
         'subjects': subjects,
         'data': data,
+    })
+
+
+def link(request, plan_id):
+    links = Link.objects.filter(plan_id=plan_id)
+
+    return JsonResponse({
+        'links': list(links.values())
     })
 
 
