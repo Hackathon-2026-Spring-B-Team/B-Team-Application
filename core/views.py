@@ -263,7 +263,7 @@ def select(request):
             try:
                 # インデックスに対応するプランを取得                
                 #selected_index = int(selected_plan_index)
-                #selected_plan = ai_plans[selected_index]
+                #elected_plan = ai_plans[selected_index]
 
                 # FIXME: 現状は暫定対応として先頭プラン(index=0)を使用
                 # 本来はフロントから受け取った selected_plan_index を反映する
@@ -297,7 +297,7 @@ def select(request):
                 Task.objects.bulk_create(tasks)                
             except (json.JSONDecodeError, ValueError, IndexError, KeyError):
                 request.session['selected_plan'] = None
-        return redirect('chart')
+        return redirect('home')
 
     # セッションから AI 生成プランを取得
     ai_plans = request.session.get('ai_generated_plans', None)
