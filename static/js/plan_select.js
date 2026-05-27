@@ -51,4 +51,15 @@ function updatedots() {
 
 // ページを開いた時とスクロールが行われるたびにスクリプトを実行
 updatedots();
-carousel.addEventListener("scroll", updatedots);
+
+// スクロールが速いとカルーセルの位置を検知できない為、スクロール中は待機しスクロールが止まって100ms後に実行
+let scrollTimer;
+
+carousel.addEventListener("scroll", () => {
+  clearTimeout(scrollTimer);
+
+  scrollTimer = setTimeout(() => {
+    updatedots();
+  }, 100);
+});
+

@@ -268,12 +268,12 @@ def select(request):
         if ai_plans:
             try:
                 # インデックスに対応するプランを取得                
-                #selected_index = int(selected_plan_index)
-                #elected_plan = ai_plans[selected_index]
+                selected_index = int(selected_plan_index)
+                selected_plan = ai_plans[selected_index]
 
                 # FIXME: 現状は暫定対応として先頭プラン(index=0)を使用
                 # 本来はフロントから受け取った selected_plan_index を反映する
-                selected_plan = ai_plans[0]
+                # selected_plan = ai_plans[0]
 
                 request.session['selected_plan'] = selected_plan
 
