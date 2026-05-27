@@ -200,7 +200,7 @@ def home(request):
         )
     ).filter(user=request.user)
 
-    print(plans.first().today_tasks)
+    # print(plans.first().today_tasks)
     # plans = Plan.objects.prefetch_related('tasks').filter(user=request.user)
 
     # plan = Plan.objects.prefetch_related('tasks').filter(user=request.user).first() 
