@@ -238,8 +238,15 @@ def home(request):
     #     })
 
     # return JsonResponse(data, safe=False)
+    plan = plans.first()
+
+    if plan:
+        print(plan.today_tasks)
+    else:
+        print(None)
+
     return render(request, 'dashboard/home.html', {
-        'plans': plans
+        'plans': plans if plans.exists() else None
     })
 
 
