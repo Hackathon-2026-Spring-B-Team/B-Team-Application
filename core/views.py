@@ -249,6 +249,12 @@ def home(request):
         'plans': plans if plans.exists() else None
     })
 
+def delete_plan(request, plan_id):
+    plan = Plan.objects.filter(id=plan_id).first()
+    plan.delete()
+
+    return redirect('home')
+
 
 def select(request):
     # POSTで選択プランデータが送られたらセッションに保存してリダイレクト
