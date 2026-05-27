@@ -1,6 +1,6 @@
-{% load static %}
-
 {% extends 'dashboard/base.html' %}
+
+{% load static %}
 
 {% block title %}プラン詳細{% endblock %}
 
@@ -10,10 +10,10 @@
 
 <!-- 画面遷移用ボタンコンテナ -->
 <div class="flex gap-4 mb-8">
-  <a href="{% url 'plan_table'%}" class="flex-1 bg-green-600 text-white transition-colors py-3 rounded-xl font-bold text-center text-sm shadow-md flex items-center justify-center">
+  <a href="{% url 'plan_table' plan.id %}" class="flex-1 bg-green-600 text-white transition-colors py-3 rounded-xl font-bold text-center text-sm shadow-md flex items-center justify-center">
     ロードマップ
   </a>
-  <a href="{% url 'plan_table'%}" class="flex-1 bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors py-3 rounded-xl font-bold text-center text-sm shadow-sm flex items-center justify-center">
+  <a href="{% url 'chart' plan.id %}" class="flex-1 bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors py-3 rounded-xl font-bold text-center text-sm shadow-sm flex items-center justify-center">
     進捗グラフ
   </a>
 </div>
@@ -25,7 +25,9 @@
 
 <!-- 本日のタスクカード -->
 <div class="bg-white rounded-xl shadow-md p-4 mb-4 border border-gray-100 text-xs">
-  <a class="block space-y-2 hover:opacity-70 transition" href="{% url 'task_detail' plan.task.task.id %}">
+  {% comment %} <a class="block space-y-2 hover:opacity-70 transition" href="{% url 'task_detail' plan.task.task.id %}"> {% endcomment %}
+  {% comment %} <a class="block space-y-2 hover:opacity-70 transition" href="{% url 'task_detail' plan.tasks.first.id %}" {% endcomment %}
+  <a class="block space-y-2 hover:opacity-70 transition" href="{% url 'task_detail' today_task.id %}"
 
     <!-- タスク名 -->
     <div class="font-bold text-gray-900 text-base">基礎理論：情報の基礎理論</div>
@@ -75,9 +77,9 @@
       </div>
       
       <!-- カードを表示 -->
-      {% for task in plan.tasks %}
+      {% for task in plan.tasks.all %}
       <div class="task-card bg-white rounded-xl shadow-md p-4 mb-4 border border-gray-100 text-xs" data-filter-value="わからない">
-        <a class="block space-y-2 hover:opacity-70 transition" href="#">
+        <a class="block space-y-2 hover:opacity-70 transition" href="{% url 'task_detail' today_task.id %}">
 
           <!-- タスク名 -->
           <div class="font-bold text-gray-900 text-base">{{ task.title }}</div>
@@ -99,9 +101,9 @@
             <span class="bg-gray-100 px-2 py-1 rounded font-medium">期間</span>
             <span>{{ task.task_start_date }}〜{{ task.task_end_date }}</span>
           </div>
-
         </a>
       </div>
+      {% endfor %}
 
     </div>
   </details>
@@ -128,9 +130,9 @@
       </div>
       
       <!-- カードを表示 -->
-      {% for task in plan.tasks %}
+      {% for task in plan.tasks.all %}
       <div class="task-card bg-white rounded-xl shadow-md p-4 mb-4 border border-gray-100 text-xs" data-filter-value="わからない">
-        <a class="block space-y-2 hover:opacity-70 transition" href="#">
+        <a class="block space-y-2 hover:opacity-70 transition" href="{% url 'task_detail' today_task.id %}">
 
           <!-- タスク名 -->
           <div class="font-bold text-gray-900 text-base">{{ task.title }}</div>
@@ -155,6 +157,7 @@
 
         </a>
       </div>
+      {% endfor %}
     </div>
   </details>
 

@@ -15,6 +15,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from django.core import serializers
+from django.db.models import Prefetch, Count, Q
 
 # Create your views here.
 def request_ai_api(request):
@@ -133,7 +134,7 @@ def signup(request):
                 password=password,
             )
             login(request, user)
-            return redirect("form") 
+            return redirect("home") 
 
     return render(request, "auth/signup.html")
 
@@ -157,7 +158,7 @@ def signin(request):
 
         if user is not None:
             login(request, user)
-            return redirect("form")
+            return redirect("home")
         else:
             messages.error(request, "ユーザー名またはパスワードが違います。")
 
@@ -185,34 +186,61 @@ def form(request):
     )
 
 
-def home(request): # FIXME 一旦JSONを返す仕様としている
-    plans = Plan.objects.prefetch_related('tasks').filter(user=request.user)
+def home(request): 
+    today = timezone.now().date()
 
-    data = []
+    plans = Plan.objects.prefetch_related(
+        Prefetch(
+            'tasks',
+            queryset=Task.objects.filter(
+                task_start_date__date__lte=today,
+                task_end_date__date__gte=today,
+            ).order_by('task_start_date'),
+            to_attr='today_tasks'
+        )
+    ).filter(user=request.user)
 
-    for plan in plans:
-        data.append({
-            "id": plan.id,
-            "plan_name": plan.plan_name,
-            "plan_start_date": plan.plan_start_date,
-            "plan_end_date": plan.plan_end_date,
-            "tasks": [
-                {
-                    "id": task.id,
-                    "genre": task.genre,
-                    "title": task.title,
-                    "is_active": task.is_active,
-                    "task_start_date": task.task_start_date,
-                    "task_end_date": task.task_end_date,
-                }
-                for task in plan.tasks.all()
-            ]
-        })
+    print(plans.first().today_tasks)
+    # plans = Plan.objects.prefetch_related('tasks').filter(user=request.user)
 
-    return JsonResponse(data, safe=False)
-    # return render(request, 'home.html', {
-    #     'plans': plans,
-    # })
+    # plan = Plan.objects.prefetch_related('tasks').filter(user=request.user).first() 
+    # # FIXME 現在選択中のプラン,一時的に最初の要素を取得
+
+    # today = timezone.now().date()
+    # today_task = Task.objects.filter(
+    #     plan=plan,
+    #     plan__user=request.user,
+    #     task_start_date__date__lte=today,
+    #     task_end_date__date__gte=today,
+    # ).order_by('task_start_date').first()
+
+
+    # FIXME 一旦JSONを返す仕様としている
+    # data = []
+
+    # for plan in plans:
+    #     data.append({
+    #         "id": plan.id,
+    #         "plan_name": plan.plan_name,
+    #         "plan_start_date": plan.plan_start_date,
+    #         "plan_end_date": plan.plan_end_date,
+    #         "tasks": [
+    #             {
+    #                 "id": task.id,
+    #                 "genre": task.genre,
+    #                 "title": task.title,
+    #                 "is_active": task.is_active,
+    #                 "task_start_date": task.task_start_date,
+    #                 "task_end_date": task.task_end_date,
+    #             }
+    #             for task in plan.tasks.all()
+    #         ]
+    #     })
+
+    # return JsonResponse(data, safe=False)
+    return render(request, 'dashboard/home.html', {
+        'plans': plans
+    })
 
 
 def select(request):
@@ -284,6 +312,95 @@ def select(request):
 
     return render(request, 'createplan/select.html', {
         'plans': plans,
+    })
+
+
+def plan_table(request, plan_id):
+    plan = Plan.objects.filter(id=plan_id).prefetch_related('tasks').filter(user=request.user).first() 
+    # FIXME 現在選択中のプラン,一時的に最初の要素を取得
+
+    today = timezone.now().date()
+    today_task = Task.objects.filter(
+        plan=plan,
+        plan__user=request.user,
+        task_start_date__date__lte=today,
+        task_end_date__date__gte=today,
+    ).order_by('task_start_date').first()
+
+    # data = []
+
+    # # for plan in plans:
+    # data.append({
+    #     "id": plan.id,
+    #     "plan_name": plan.plan_name,
+    #     "plan_start_date": plan.plan_start_date,
+    #     "plan_end_date": plan.plan_end_date,
+    #     "tasks": [
+    #         {
+    #             "id": task.id,
+    #             "genre": task.genre,
+    #             "title": task.title,
+    #             "is_active": task.is_active,
+    #             "task_start_date": task.task_start_date,
+    #             "task_end_date": task.task_end_date,
+    #         }
+    #         for task in plan.tasks.all()
+    #     ]
+    # })
+
+    return render(request, 'dashboard/plan_table.html', {
+        'plan': plan,
+        'today_task': today_task
+    })
+
+
+def task_detail(request, task_id):
+    task = Task.objects.filter(id=task_id).first()
+    
+    print("task!!!!!!!!")
+    print(task)
+
+    return render(request, 'dashboard/task_detail.html', {
+        'task': task,
+    })
+
+
+async def chart(request, plan_id):
+
+    print("plan_id")
+    print(plan_id)
+
+    qs = (
+        Task.objects
+        .filter(plan_id=plan_id, plan__user=request.user)
+        .values('genre')
+        .annotate(
+            total=Count('id'),
+            notStarted=Count('id', filter=Q(task_detail__evaluation=0)),
+            unclear=Count('id', filter=Q(task_detail__evaluation=1)),
+            partial=Count('id', filter=Q(task_detail__evaluation=2)),
+            understood=Count('id', filter=Q(task_detail__evaluation=3)),
+        )
+        .order_by('genre')
+    )
+
+    subjects = []
+    data = []
+
+    for row in qs:
+        total = row['total'] or 1
+
+        subjects.append(row['genre'])
+        data.append({
+            'notStarted': round(row['notStarted'] / total * 100),
+            'unclear': round(row['unclear'] / total * 100),
+            'partial': round(row['partial'] / total * 100),
+            'understood': round(row['understood'] / total * 100),
+        })
+
+    return JsonResponse({
+        'subjects': subjects,
+        'data': data,
     })
 
 

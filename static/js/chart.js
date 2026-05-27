@@ -1,4 +1,4 @@
-// サンプルデータ（実際にはAPIから取得）
+//サンプルデータ（実際にはAPIから取得）
 const progressData = {
     subjects: ['基礎理論', 'ネットワーク', 'ストレージ', 'セキュリティ'],
     data: [
@@ -10,6 +10,23 @@ const progressData = {
 };
 
 let chart = null;
+
+// async function fetchProgressData() {
+//     const pathParts = window.location.pathname.split('/').filter(Boolean);
+//     const planId = pathParts[1];
+
+//     console.log(planId)
+
+//     const response = await fetch(`/chart/${planId}/`);
+
+//     if (!response.ok) {
+//         throw new Error('進捗データの取得に失敗しました');
+//     }
+
+//     console.log(response)
+
+//     return await response.json();
+// }
 
 // Chart.jsの初期化
 function initializeChart() {
@@ -117,7 +134,17 @@ function initializeChart() {
     });
 }
 
-// イベントリスナーの設定
+
+// document.addEventListener('DOMContentLoaded', async function() {
+//     try {
+//         const progressData = await fetchProgressData();
+//         initializeChart(progressData);
+//     } catch (error) {
+//         console.error(error);
+//     }
+// });
+
+//イベントリスナーの設定
 document.addEventListener('DOMContentLoaded', function() {
     initializeChart();
 
@@ -139,15 +166,15 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// APIからデータを取得する関数（将来使用）
-async function fetchProgressData() {
-    try {
-        const response = await fetch('/api/progress/');
-        const data = await response.json();
-        progressData.subjects = data.subjects;
-        progressData.data = data.data;
-        initializeChart();
-    } catch (error) {
-        console.error('データ取得エラー:', error);
-    }
-}
+// // APIからデータを取得する関数（将来使用）
+// async function fetchProgressData() {
+//     try {
+//         const response = await fetch('/api/progress/');
+//         const data = await response.json();
+//         progressData.subjects = data.subjects;
+//         progressData.data = data.data;
+//         initializeChart();
+//     } catch (error) {
+//         console.error('データ取得エラー:', error);
+//     }
+// }

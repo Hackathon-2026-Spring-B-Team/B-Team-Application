@@ -1,6 +1,6 @@
-{% load static %}
-
 {% extends 'dashboard/base.html' %}
+
+{% load static %}
 
 {% block title %}ホーム{% endblock %}
 
@@ -14,15 +14,17 @@
   <!-- プラン名 -->
   {% for plan in plans %}
   <a class="flex items-center gap-1 mb-1 text-green-600 font-bold text-lg hover:opacity-70 transition" href="{% url 'plan_table' plan.id %}">
+  {% comment %} <a class="flex items-center gap-1 mb-1 text-green-600 font-bold text-lg hover:opacity-70 transition" href=""> {% endcomment %}
     <span>{{ plan.plan_name }}</span>
     <span class="material-symbols-rounded text-2xl">chevron_right</span>
   </a>
 
   <!-- タスクカード -->
-  {% for task in plan.tasks %}
+  {% comment %} {% for task in today_tasks %} {% endcomment %}
+  {% for task in plan.today_tasks %}
   <div class="bg-white rounded-xl shadow-md p-4 mb-4 border border-gray-100 text-xs">
-      <a class="block space-y-2 hover:opacity-70 transition" href="{% url 'task_detail' plan.task.task.id %}">
-
+      <a class="block space-y-2 hover:opacity-70 transition" href="{% url 'task_detail' task.plan.id %}">
+      {% comment %} <a class="block space-y-2 hover:opacity-70 transition" href=""> {% endcomment %}
         <!-- タスク名 -->
         <div class="font-bold text-gray-900 text-base">{{ task.title }}</div>
 
