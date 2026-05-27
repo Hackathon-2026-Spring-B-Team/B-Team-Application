@@ -6,7 +6,7 @@
 
 {% block content %}
 <!-- URLの設定お願いします -->
-<form action="{% url 'request_ai_api' %}" method="POST" class="flex-1 flex flex-col overflow-hidden">
+<form action="{% url 'request_ai_api' %}" method="POST" class="contents">
   {% csrf_token %}
 
   <!-- 画面上部説明 -->
