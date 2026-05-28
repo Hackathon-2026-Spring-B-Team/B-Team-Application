@@ -99,7 +99,7 @@
           <!-- 期間 -->
           <div class="text-gray-600 flex items-center gap-2">
             <span class="bg-gray-100 px-2 py-1 rounded font-medium">期間</span>
-            <span>{{ task.task_start_date }}〜{{ task.task_end_date }}</span>
+            <span>{{ today_task.task_start_date|date:"Y年n月j日" }}〜{{ today_task.task_end_date|date:"Y年n月j日" }}</span>
           </div>
         </a>
       </div>
@@ -123,10 +123,10 @@
       <!-- フィルターボタン -->
       <div class="flex gap-2 overflow-x-auto no-scrollbar mb-4 pb-2 filter-container">
         <button class="filter-btn px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-colors bg-green-600 text-white" data-target="all">すべて</button>
-        <button class="filter-btn px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-colors bg-white text-gray-600 border border-gray-200" data-target="わからない">わからない</button>
-        <button class="filter-btn px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-colors bg-white text-gray-600 border border-gray-200" data-target="なんとなく">なんとなく</button>
-        <button class="filter-btn px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-colors bg-white text-gray-600 border border-gray-200" data-target="理解した">理解した</button>
-        <button class="filter-btn px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-colors bg-white text-gray-600 border border-gray-200" data-target="未実施">未実施</button>
+        <button class="filter-btn px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-colors bg-white text-gray-600 border border-gray-200" data-target="1">わからない</button>
+        <button class="filter-btn px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-colors bg-white text-gray-600 border border-gray-200" data-target="2">なんとなく</button>
+        <button class="filter-btn px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-colors bg-white text-gray-600 border border-gray-200" data-target="3">理解した</button>
+        <button class="filter-btn px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-colors bg-white text-gray-600 border border-gray-200" data-target="0">未実施</button>
       </div>
       
       <!-- カードを表示 -->
@@ -152,7 +152,7 @@
           <!-- 期間 -->
           <div class="text-gray-600 flex items-center gap-2">
             <span class="bg-gray-100 px-2 py-1 rounded font-medium">期間</span>
-            <span>{{ task.task_start_date }}〜{{ task.task_end_date }}</span>
+            <span>{{ today_task.task_start_date|date:"Y年n月j日" }}〜{{ today_task.task_end_date|date:"Y年n月j日" }}</span>
           </div>
 
         </a>
