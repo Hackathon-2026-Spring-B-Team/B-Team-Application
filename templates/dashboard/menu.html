@@ -1,0 +1,21 @@
+{% extends 'dashboard/base.html' %}
+
+{% load static %}
+
+{% block title %}メニュー{% endblock %}
+
+{% block content %}
+
+  <!-- プランがある時表示する -->
+  <h1 class="text-2xl font-bold text-gray-900 mb-5">
+    メニュー
+  </h1>
+  
+  <!-- ログアウト -->
+  <div class="bg-white rounded-xl shadow-md p-4 mb-4 border border-gray-100 text-xs">
+      <a class="flex hover:opacity-70 transition" href="{% url 'signout' %}">
+        <h2 class="text-negative-red text-lg text-center">ログアウト</h2>
+        <span class="material-symbols-rounded text-lg text-negative-red">logout</span>
+      </a>
+  </div>
+{% endblock %}
