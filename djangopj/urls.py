@@ -41,7 +41,7 @@ urlpatterns = [
     path("plan_table/<int:plan_id>", core_views.plan_table, name="plan_table"),
     path("task_detail/<int:task_id>/", core_views.task_detail, name="task_detail"),
     path("api/chart/<int:plan_id>/", core_views.api_chart, name="api_chart"), # JSONレスポンス用
-    path("chart/<int:plan_id>/", TemplateView.as_view(template_name='dashboard/chart.html'), name="chart"), # 描画用
+    path("chart/<int:plan_id>/", core_views.chart, name="chart"), # 描画用
     path("link/<int:plan_id>/", core_views.link, name="link"),
 
     # OpenAI API
