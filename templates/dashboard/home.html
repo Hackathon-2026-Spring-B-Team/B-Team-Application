@@ -31,7 +31,7 @@
   {% comment %} {% for task in today_tasks %} {% endcomment %}
   {% for task in plan.today_tasks %}
   <div class="bg-white rounded-xl shadow-md p-4 mb-4 border border-gray-100 text-xs">
-      <a class="block space-y-2 hover:opacity-70 transition" href="{% url 'task_detail' task.plan.id %}">
+      <a class="block space-y-2 hover:opacity-70 transition" href="{% url 'task_detail' task.id %}">
       {% comment %} <a class="block space-y-2 hover:opacity-70 transition" href=""> {% endcomment %}
         <!-- タスク名 -->
         <div class="font-bold text-gray-900 text-base">{{ task.title }}</div>
@@ -45,7 +45,7 @@
         <!-- 理解度 -->
         <div class="text-gray-600 flex items-center gap-2">
           <span class="bg-gray-100 px-2 py-1 rounded font-medium">理解度</span>
-          <span class="text-negative-red font-bold">未実施</span>
+          <span class="text-negative-red font-bold">{{ task.task_detail.get_evaluation_display }}</span>
         </div>
 
         <!-- 期間 -->

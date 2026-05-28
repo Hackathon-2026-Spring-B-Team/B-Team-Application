@@ -374,6 +374,19 @@ def plan_table(request, plan_id):
 
 
 def task_detail(request, task_id):
+    if request.method == 'POST':
+
+        task_detail, created = TaskDetail.objects.update_or_create(
+            task_id=task_id,
+            defaults={
+                'evaluation': int(request.POST.get("evaluation", "0")),
+                'memo': request.POST.get("memo", "")
+            }
+        )
+
+        return redirect('home')
+
+
     task = Task.objects.filter(id=task_id).first()
     
     print("task!!!!!!!!")

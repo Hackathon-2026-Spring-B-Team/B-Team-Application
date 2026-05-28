@@ -24,4 +24,22 @@ document.addEventListener('DOMContentLoaded', () => {
       hiddenInput.value = button.getAttribute('data-value');
     });
   });
+
+  // 初期値が設定されている場合、対応するボタンを選択状態にする
+  const initialValue = hiddenInput.value;
+  if (initialValue && initialValue !== '未実施') {
+    const initialButton = document.querySelector(`.eval-btn[data-value="${initialValue}"]`);
+    if (initialButton) {
+      const container = initialButton.closest('.eval-container');
+      const siblings = container.querySelectorAll('.eval-btn');
+      
+      siblings.forEach(btn => {
+        btn.classList.remove('bg-green-600', 'text-white', 'border-transparent');
+        btn.classList.add('bg-white', 'text-gray-600', 'border-gray-200');
+      });
+      
+      initialButton.classList.remove('bg-white', 'text-gray-600', 'border-gray-200');
+      initialButton.classList.add('bg-green-600', 'text-white', 'border-transparent');
+    }
+  }
 });

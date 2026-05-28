@@ -30,24 +30,24 @@
   <a class="block space-y-2 hover:opacity-70 transition" href="{% url 'task_detail' today_task.id %}"
 
     <!-- タスク名 -->
-    <div class="font-bold text-gray-900 text-base">基礎理論：情報の基礎理論</div>
+    <div class="font-bold text-gray-900 text-base">{{ today_task.title }}</div>
 
     <!-- 種類 -->
     <div class="text-gray-600 flex items-center gap-2">
       <span class="bg-gray-100 px-2 py-1 rounded font-medium">種類</span>
-      <span>確認・レビュー</span>
+      <span>{{ today_task.genre }}</span>
     </div>
     
     <!-- 理解度 -->
     <div class="text-gray-600 flex items-center gap-2">
       <span class="bg-gray-100 px-2 py-1 rounded font-medium">理解度</span>
-      <span class="text-negative-red font-bold">未実施</span>
+      <span class="text-negative-red font-bold">{{ today_task.task_detail.get_evaluation_display  }}</span>
     </div>
 
     <!-- 期間 -->
     <div class="text-gray-600 flex items-center gap-2">
       <span class="bg-gray-100 px-2 py-1 rounded font-medium">期間</span>
-      <span>2026-05-01〜2026-05-01</span>
+      <span>{{ today_task.task_start_date|date:"Y年n月j日" }}〜{{ today_task.task_end_date|date:"Y年n月j日" }}</span>
     </div>
 
   </a>
@@ -93,7 +93,7 @@
           <!-- 理解度 -->
           <div class="text-gray-600 flex items-center gap-2">
             <span class="bg-gray-100 px-2 py-1 rounded font-medium">理解度</span>
-            <span class="text-negative-red font-bold">{{ task.evaluation }}</span>
+            <span class="text-negative-red font-bold">{{ task.task_detail.get_evaluation_display  }}</span>
           </div>
 
           <!-- 期間 -->
@@ -146,7 +146,7 @@
           <!-- 理解度 -->
           <div class="text-gray-600 flex items-center gap-2">
             <span class="bg-gray-100 px-2 py-1 rounded font-medium">理解度</span>
-            <span class="text-negative-red font-bold">{{ task.evaluation }}</span>
+            <span class="text-negative-red font-bold">{{ task.task_detail.get_evaluation_display  }}</span>
           </div>
 
           <!-- 期間 -->
