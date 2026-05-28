@@ -4,16 +4,18 @@ services:
       # ビルドコンテナはカレントディレクトリ
       context: .
       dockerfile: dockerfiles/django/Dockerfile
-    # マイグレーション実行、静的ファイル収集、gunicorn起動 gunicornの設定を適応
+    # 静的ファイル収集、gunicorn起動 gunicornの設定を適応
     command: >
       sh -c "
-      python manage.py migrate &&
       python manage.py collectstatic --noinput &&
       gunicorn djangopj.wsgi:application --config /code/dockerfiles/django/gunicorn_config.py"
     environment:
       TZ: Asia/Tokyo
     env_file:
       - .env
+    # 静的ファイルをwebとnginxコンテナで共有
+    volumes:
+      - static_volume:/code/staticfiles
     # コンテナ内でポート番号8000使用を宣言
     expose:
       - "8000"
@@ -36,6 +38,9 @@ services:
       TZ: Asia/Tokyo
     ports:
       - 80:80
+    # 静的ファイルをwebとnginxコンテナで共有
+    volumes:
+      - static_volume:/code/staticfiles
     depends_on:
       - web
     # 手動停止以外で停止した場合コンテナ再起動
@@ -47,3 +52,7 @@ services:
         awslogs-region: ap-northeast-1
         awslogs-group: HackathonB-Team
         tag: "{{.Name}}.{{.FullID}}"
+
+# コンテナ間で静的ファイルを共有する
+volumes:
+  static_volume:
