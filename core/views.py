@@ -396,12 +396,16 @@ def task_detail(request, task_id):
     print(task)
 
     return render(request, 'dashboard/task_detail.html', {
+        'plan': task.plan,
         'task': task,
     })
 
 
 def chart(request, plan_id):
+    plan = Plan.objects.filter(id=plan_id).prefetch_related('tasks').filter(user=request.user).first()
+
     return render(request, 'dashboard/chart.html', {
+        'plan': plan,
         'plan_id': plan_id,
     })
 
