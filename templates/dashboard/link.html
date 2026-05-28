@@ -7,7 +7,9 @@
 {% block planname %}{{ plan_name }}{% endblock %}
 
 {% block content %}
-
+<h1 class="text-2xl font-bold text-gray-900 mb-5">
+  外部リンク
+</h1>
 
 
 
@@ -34,7 +36,7 @@
                     </a>
                 </div>
                 <!-- 削除ボタン -->
-                <button type="button" class="my-3 ml-3 deleteOpenBtn flex items-center justify-center text-gray-300 hover:text-negative-red transition rounded-full active:bg-gray-100 shrink-0" data-url="{% url 'delete_plan' plan.id %}">
+                <button type="button" class="my-3 ml-3 deleteOpenBtn flex items-center justify-center text-gray-300 hover:text-negative-red transition rounded-full active:bg-gray-100 shrink-0" data-url="{% url 'delete_link' link.id %}">
                     <span class="material-symbols-rounded text-2xl items-center">delete</span>
                 </button>
             </div>
@@ -46,7 +48,7 @@
         <button type="button"
                 onclick="openTaskModal('{{ plan.id }}', '{{ plan.plan_name|escapejs }}')"
                 class="inline-flex items-center justify-center w-8 h-8 text-black text-2xl hover:bg-gray-100 rounded-full transition">
-            <span>＋</span>
+            <span class="material-symbols-rounded text-2xl">add</span>
         </button>
         </div>
 
@@ -81,7 +83,7 @@
       <button type="button"
               onclick="closeTaskModal()"
               class="text-gray-400 hover:text-gray-700">
-        ✕
+      <span class="material-symbols-rounded">close</span>
       </button>
     </div>
 
@@ -102,7 +104,7 @@
                id="taskTitleInput"
                name="link_name"
                required
-               class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+               class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-600 focus:bg-white transition-colors">
       </div>
 
       <div>
@@ -113,20 +115,20 @@
                id="taskTitleInput"
                name="url"
                required
-               class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+               class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-600 focus:bg-white transition-colors">
       </div>
 
     </div>
 
-    <div class="flex justify-end gap-3 px-6 py-4 border-t bg-gray-50">
+    <div class="flex justify-end gap-3 px-6 py-4">
       <button type="button"
               onclick="closeTaskModal()"
-              class="px-4 py-2 rounded-lg bg-white border border-gray-300 text-gray-700 font-bold hover:bg-gray-100">
+              class="flex-1 py-3 rounded-xl bg-white border border-gray-300 text-gray-700 font-bold hover:bg-gray-100">
         キャンセル
       </button>
 
       <button type="submit"
-              class="px-4 py-2 rounded-lg bg-green-600 text-white font-bold hover:bg-green-700">
+              class="flex-1 py-3 rounded-xl bg-green-600 text-white font-bold hover:bg-green-700">
         追加する
       </button>
     </div>
@@ -134,7 +136,34 @@
   </form>
 </dialog>
 
+<!-- リンク削除モーダル -->
+<div id="deleteModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden opacity-0 transition-opacity duration-300">
+  <!-- モーダルのカード本体 -->
+  <div id="deleteModalCard" class="bg-white rounded-2xl shadow-xl w-11/12 max-w-sm p-6 transform scale-95 transition-transform duration-300">
+    
+    <!-- モーダルのメッセージ -->
+    <div class="flex flex-col items-center text-center space-y-3 mb-6">
+      <div class="flex items-center justify-center">
+        <span class="material-symbols-rounded text-negative-red text-2xl">warning</span>
+        <h3 class="text-lg font-bold text-gray-900">リンクを削除しますか？</h3>
+      </div>
+      <p class="text-sm text-gray-600">この操作は取り消せません</p>
+    </div>
+    
+    <!-- モーダルのボタンコンテナ兼フォーム-->
+    <form id="deleteForm" method="POST" action="" class="flex gap-3 w-full m-0">
+      {% csrf_token %}
 
+      <button type="button" id="deleteCancelBtn" class="flex-1 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold text-sm hover:bg-gray-200 transition-colors">
+        キャンセル
+      </button>
+      
+      <button type="submit" id="deleteConfirmBtn" class="flex-1 py-3 bg-negative-red text-white rounded-xl font-bold text-sm shadow-md hover:bg-red-700 transition-colors">
+        削除
+      </button>
+    </form>
+  </div>
+</div>
 
 
  
@@ -142,7 +171,8 @@
 {% endblock %}
 
 {% block extra_js %}
-
+削除用モーダル
+<script src="{% static 'js/delete_modal.js' %}"></script>
   <!-- 変更: モーダル開閉用JS -->
 <script>
   const taskModal = document.getElementById('taskModal');
