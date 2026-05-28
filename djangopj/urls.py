@@ -29,6 +29,7 @@ urlpatterns = [
     path("regenerate/", core_views.regenerate, name="regenerate"),
     #path("select/", TemplateView.as_view(template_name='select.html'), name="select"),
     path("home/", core_views.home, name="home"),
+    path("menu/", core_views.menu, name="menu"),
     path("delete_plan/<int:plan_id>", core_views.delete_plan, name="delete_plan"),
     #path("chart/", TemplateView.as_view(template_name='dashboard/chart.html'), name="chart"),
     #path("login/", TemplateView.as_view(template_name='login.html'), name="login"),

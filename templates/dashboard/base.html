@@ -46,7 +46,7 @@
         <span class="font-bold mt-1">リンク</span>
       </a>
       {% comment %} <a href="{% url 'menu' %}"  {% endcomment %}
-      <a href="" 
+      <a href="{% url 'menu' %}" 
           class="flex flex-col items-center text-xs transition {% if request.resolver_match.url_name == 'menu' %}text-green-600{% else %}text-gray-400 hover:text-green-600{% endif %}">
         <span class="material-symbols-rounded text-3xl">menu</span>
         <span class="font-bold mt-1">メニュー</span>

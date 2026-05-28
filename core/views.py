@@ -164,6 +164,9 @@ def signin(request):
 
     return render(request, "auth/login.html")
 
+def menu(request):
+    return render(request, 'dashboard/menu.html')
+
 
 def signout(request):
     logout(request)
