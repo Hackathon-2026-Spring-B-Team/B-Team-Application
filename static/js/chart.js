@@ -1,35 +1,35 @@
-//サンプルデータ（実際にはAPIから取得）
-const progressData = {
-    subjects: ['基礎理論', 'ネットワーク', 'ストレージ', 'セキュリティ'],
-    data: [
-        { notStarted: 10, unclear: 15, partial: 25, understood: 50 },
-        { notStarted: 5, unclear: 20, partial: 20, understood: 55 },
-        { notStarted: 15, unclear: 10, partial: 25, understood: 50 },
-        { notStarted: 8, unclear: 18, partial: 22, understood: 52 }
-    ]
-};
+// //サンプルデータ（実際にはAPIから取得）
+// const progressData = {
+//     subjects: ['基礎理論', 'ネットワーク', 'ストレージ', 'セキュリティ'],
+//     data: [
+//         { notStarted: 10, unclear: 15, partial: 25, understood: 50 },
+//         { notStarted: 5, unclear: 20, partial: 20, understood: 55 },
+//         { notStarted: 15, unclear: 10, partial: 25, understood: 50 },
+//         { notStarted: 8, unclear: 18, partial: 22, understood: 52 }
+//     ]
+// };
 
 let chart = null;
 
-// async function fetchProgressData() {
-//     const pathParts = window.location.pathname.split('/').filter(Boolean);
-//     const planId = pathParts[1];
+async function fetchProgressData() {
+    const pathParts = window.location.pathname.split('/').filter(Boolean);
+    const planId = pathParts[1];
 
-//     console.log(planId)
+    console.log(planId)
 
-//     const response = await fetch(`/chart/${planId}/`);
+    const response = await fetch(`/api/chart/${planId}/`);
 
-//     if (!response.ok) {
-//         throw new Error('進捗データの取得に失敗しました');
-//     }
+    if (!response.ok) {
+        throw new Error('進捗データの取得に失敗しました');
+    }
 
-//     console.log(response)
+    console.log(response)
 
-//     return await response.json();
-// }
+    return await response.json();
+}
 
 // Chart.jsの初期化
-function initializeChart() {
+function initializeChart(progressData) {
     const ctx = document.getElementById('progressChart');
     
     // データセットの準備
@@ -135,36 +135,36 @@ function initializeChart() {
 }
 
 
-// document.addEventListener('DOMContentLoaded', async function() {
-//     try {
-//         const progressData = await fetchProgressData();
-//         initializeChart(progressData);
-//     } catch (error) {
-//         console.error(error);
-//     }
-// });
-
-//イベントリスナーの設定
-document.addEventListener('DOMContentLoaded', function() {
-    initializeChart();
-
-    // ロードマップボタン
-    document.getElementById('roadmapBtn').addEventListener('click', function() {
-        alert('ロードマップ機能は準備中です');
-    });
-
-    // 進捗グラフボタン（既に選択状態）
-    document.getElementById('progressBtn').addEventListener('click', function() {
-        console.log('進捗グラフを表示中');
-    });
-
-    // ウィンドウサイズ変更時のリサイズ処理
-    window.addEventListener('resize', function() {
-        if (chart) {
-            chart.resize();
-        }
-    });
+document.addEventListener('DOMContentLoaded', async function() {
+    try {
+        const progressData = await fetchProgressData();
+        initializeChart(progressData);
+    } catch (error) {
+        console.error(error);
+    }
 });
+
+// //イベントリスナーの設定
+// document.addEventListener('DOMContentLoaded', function() {
+//     initializeChart();
+
+//     // ロードマップボタン
+//     document.getElementById('roadmapBtn').addEventListener('click', function() {
+//         alert('ロードマップ機能は準備中です');
+//     });
+
+//     // 進捗グラフボタン（既に選択状態）
+//     document.getElementById('progressBtn').addEventListener('click', function() {
+//         console.log('進捗グラフを表示中');
+//     });
+
+//     // ウィンドウサイズ変更時のリサイズ処理
+//     window.addEventListener('resize', function() {
+//         if (chart) {
+//             chart.resize();
+//         }
+//     });
+// });
 
 // // APIからデータを取得する関数（将来使用）
 // async function fetchProgressData() {

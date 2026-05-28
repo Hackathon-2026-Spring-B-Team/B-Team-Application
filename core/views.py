@@ -10,7 +10,7 @@ from django.conf import settings
 from openai import OpenAI
 import core.prompt as Prompt
 import json
-from core.models import Task, Plan, Link
+from core.models import Task, Plan, Link, TaskDetail
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
@@ -300,9 +300,15 @@ def select(request):
                         task_end_date=task_item.get("task_end_date"),
                     )
                     tasks.append(task)
-                Task.objects.bulk_create(tasks)                
-            except (json.JSONDecodeError, ValueError, IndexError, KeyError):
+                Task.objects.bulk_create(tasks)
+                # データベースから Task を再取得（ID が設定される）
+                created_tasks = Task.objects.filter(plan=plan)  
+                for task in created_tasks:
+                    TaskDetail.objects.create(task=task)
+            # except (json.JSONDecodeError, ValueError, IndexError, KeyError):
+            except Exception as e:
                 request.session['selected_plan'] = None
+                print(f"Error: {e}") 
         return redirect('home')
 
     # セッションから AI 生成プランを取得
@@ -378,7 +384,13 @@ def task_detail(request, task_id):
     })
 
 
-async def chart(request, plan_id):
+def chart(request, plan_id):
+    return render(request, 'dashboard/chart.html', {
+        'plan_id': plan_id,
+    })
+
+
+def api_chart(request, plan_id):
 
     print("plan_id")
     print(plan_id)
@@ -411,16 +423,16 @@ async def chart(request, plan_id):
             'understood': round(row['understood'] / total * 100),
         })
 
-    return render(request, 'dashboard/plan_table.html', {
-        'subjects': subjects,
-        'data': data,
-        'plan_id': plan_id
-    })
-
-    # return JsonResponse({
+    # return render(request, 'dashboard/plan_table.html', {
     #     'subjects': subjects,
     #     'data': data,
+    #     'plan_id': plan_id
     # })
+
+    return JsonResponse({
+        'subjects': subjects,
+        'data': data,
+    })
 
 
 def link(request, plan_id):

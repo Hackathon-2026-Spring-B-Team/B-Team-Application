@@ -50,7 +50,7 @@ class TaskDetail(ModelBaseClass):
         related_name='task_detail'
     )
     evaluation=models.IntegerField(default=0, null=False)
-    memo=models.TextField()
+    memo=models.TextField(null=True)
 
 class Link(ModelBaseClass):
     # task_detail=models.ForeignKey(
