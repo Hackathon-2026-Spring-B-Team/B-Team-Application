@@ -23,7 +23,7 @@ from django.views.generic import TemplateView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-
+    path('', core_views.home),
     path("hoge/", TemplateView.as_view(template_name='hoge.html'), name="hoge"),
     path("form/", TemplateView.as_view(template_name='createplan/form.html'), name="form"),
     path("regenerate/", core_views.regenerate, name="regenerate"),

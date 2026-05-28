@@ -18,6 +18,7 @@ from django.core import serializers
 from django.db.models import Prefetch, Count, Q
 
 # Create your views here.
+@login_required
 def request_ai_api(request):
     # prompt = Prompt.word
     prompt = ""
@@ -85,7 +86,7 @@ def request_ai_api(request):
     # json = {"data1": "hoge", "data2": "fuga", "response": response.output_text}
     # return JsonResponse(json)
 
-
+@login_required
 def regenerate(request):
     # if request.method == "POST":
     #     original_data = request.session.pop('ai_generated_plans', None)
@@ -164,10 +165,13 @@ def signin(request):
 
     return render(request, "auth/login.html")
 
+
+@login_required
 def menu(request):
     return render(request, 'dashboard/menu.html')
 
 
+@login_required
 def signout(request):
     logout(request)
     return redirect("signin")
@@ -189,6 +193,7 @@ def form(request):
     )
 
 
+@login_required
 def home(request): 
     today = timezone.now().date()
 
@@ -252,6 +257,8 @@ def home(request):
         'plans': plans if plans.exists() else None
     })
 
+
+@login_required
 def delete_plan(request, plan_id):
     plan = Plan.objects.filter(id=plan_id).first()
     plan.delete()
@@ -259,6 +266,7 @@ def delete_plan(request, plan_id):
     return redirect('home')
 
 
+@login_required
 def select(request):
     # POSTで選択プランデータが送られたらセッションに保存してリダイレクト
     if request.method == 'POST':
@@ -337,6 +345,7 @@ def select(request):
     })
 
 
+@login_required
 def plan_table(request, plan_id):
     plan = Plan.objects.filter(id=plan_id).prefetch_related('tasks').filter(user=request.user).first() 
     # FIXME 現在選択中のプラン,一時的に最初の要素を取得
@@ -375,7 +384,7 @@ def plan_table(request, plan_id):
         'today_task': today_task
     })
 
-
+@login_required
 def task_detail(request, task_id):
     if request.method == 'POST':
 
@@ -401,6 +410,7 @@ def task_detail(request, task_id):
     })
 
 
+@login_required
 def chart(request, plan_id):
     plan = Plan.objects.filter(id=plan_id).prefetch_related('tasks').filter(user=request.user).first()
 
@@ -410,6 +420,7 @@ def chart(request, plan_id):
     })
 
 
+@login_required
 def api_chart(request, plan_id):
 
     print("plan_id")
@@ -455,6 +466,7 @@ def api_chart(request, plan_id):
     })
 
 
+@login_required
 def link(request):
     if request.method == "POST":
 
