@@ -14,7 +14,7 @@ def generate_prompt(plan_name, plan_date, daily_available_minutes, feedback = ''
   
 
   必須条件:\
-  - タスクは本日からplan_date（受験日）までのプランで生成する\
+  - 学習プランのスタート日は必ず本日から開始のものとし、plan_date（受験日）までのプランで生成する\
   - タスクは初心者でも始められる粒度にしてください\
   - genreは、plan_name（受験する試験）の実在する試験範囲・シラバス・学習項目を元に設定してください\
   - 1つのgenreは1つの学習テーマ（大分類）とし、1つのgenreに対して複数の具体的なタスクを作成してください\
