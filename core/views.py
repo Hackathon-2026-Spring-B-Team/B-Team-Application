@@ -87,29 +87,29 @@ def request_ai_api(request):
 
 
 def regenerate(request):
-    if request.method == "POST":
-        original_data = request.session.pop('ai_generated_plans', None)
-        feedback = request.POST.get("feedback", "").strip()
+    # if request.method == "POST":
+    #     original_data = request.session.pop('ai_generated_plans', None)
+    #     feedback = request.POST.get("feedback", "").strip()
 
-        prompt = Prompt.regenerate_prompt(original_data, feedback)
+    #     prompt = Prompt.regenerate_prompt(original_data, feedback)
 
-        client = OpenAI(api_key=settings.AI_API_KEY)
+    #     client = OpenAI(api_key=settings.AI_API_KEY)
 
-        #APIを使ってリクエストを投げる
-        response = client.responses.create(
-            model="gpt-5-nano",
-            input=prompt,
-            store=True
-        )
+    #     #APIを使ってリクエストを投げる
+    #     response = client.responses.create(
+    #         model="gpt-5-nano",
+    #         input=prompt,
+    #         store=True
+    #     )
 
-        data = json.loads(response.output_text)
+    #     data = json.loads(response.output_text)
 
-        print(data)
+    #     print(data)
         
-        # プランデータをセッションに保存して select へリダイレクト
-        request.session['ai_generated_plans'] = data.get('plans', [])
+    #     # プランデータをセッションに保存して select へリダイレクト
+    #     request.session['ai_generated_plans'] = data.get('plans', [])
         
-        return redirect('select')
+    #     return redirect('select')
 
     return render(request, "createplan/regenerate.html")
 
@@ -397,7 +397,7 @@ def task_detail(request, task_id):
 
     return render(request, 'dashboard/task_detail.html', {
         'plan': task.plan,
-        'task': task,
+        'task': task
     })
 
 
@@ -455,12 +455,32 @@ def api_chart(request, plan_id):
     })
 
 
-def link(request, plan_id):
-    links = Link.objects.filter(plan_id=plan_id)
+def link(request):
+    if request.method == "POST":
 
-    return JsonResponse({
-        'links': list(links.values())
+        plan_id = request.POST.get('plan_id')
+
+        created = Link.objects.create(
+            plan_id=int(plan_id),
+            url=request.POST.get('url', ""),
+            link_name=request.POST.get("link_name", "")
+        )
+
+        return redirect('link')
+
+        
+
+    plans = Plan.objects.filter(user=request.user)
+    #links = Link.objects.filter(plan_id=plan_id)
+
+
+    return render(request, 'dashboard/link.html', {
+        'plans': plans
+        # 'links': links
     })
+    # return JsonResponse({
+    #     'links': list(links.values())
+    # })
 
 
 def _process_plans(ai_plans):

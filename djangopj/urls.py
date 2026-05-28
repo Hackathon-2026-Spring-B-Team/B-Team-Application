@@ -42,7 +42,7 @@ urlpatterns = [
     path("task_detail/<int:task_id>/", core_views.task_detail, name="task_detail"),
     path("api/chart/<int:plan_id>/", core_views.api_chart, name="api_chart"), # JSONレスポンス用
     path("chart/<int:plan_id>/", core_views.chart, name="chart"), # 描画用
-    path("link/<int:plan_id>/", core_views.link, name="link"),
+    path("link/", core_views.link, name="link"),
 
     # OpenAI API
     path('request_ai_api/', core_views.request_ai_api, name="request_ai_api"),
