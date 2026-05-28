@@ -11,11 +11,11 @@
       <!-- プラン詳細などの時はプラン名を表示 -->
       {% if request.resolver_match.url_name == 'plan_table' or request.resolver_match.url_name == 'task_detail' or request.resolver_match.url_name == 'chart' %}
         <img src="{% static 'images/logo_white.png' %}" alt="logo_white" class="h-16 w-auto">
-      {% else %}
-        <img src="{% static 'images/logo_header.png' %}" alt="logo_header" class="h-16 w-auto">
         <span class="text-white text-xl font-medium">
           {{ plan.plan_name }}
         </span>
+      {% else %}
+        <img src="{% static 'images/logo_header.png' %}" alt="logo_header" class="h-16 w-auto">
       {% endif %}
 
     </header>
@@ -39,7 +39,7 @@
         <span class="font-bold mt-1">新規</span>
       </a>
       {% comment %} <a href="{% url 'link_list' %}"  {% endcomment %}
-      <a href="" 
+      <a href="{% url 'link' %}" 
           class="flex flex-col items-center text-xs transition {% if request.resolver_match.url_name == 'link_list' %}text-green-600{% else %}text-gray-400 hover:text-green-600{% endif %}">
         <span class="material-symbols-rounded text-3xl">link</span>
         <span class="font-bold mt-1">リンク</span>

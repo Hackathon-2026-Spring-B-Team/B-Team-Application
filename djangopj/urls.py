@@ -22,7 +22,7 @@ from django.views.generic import TemplateView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-
+    path('', core_views.home),
     path("hoge/", TemplateView.as_view(template_name='hoge.html'), name="hoge"),
     path("form/", TemplateView.as_view(template_name='createplan/form.html'), name="form"),
     # path("select/", TemplateView.as_view(template_name='select.html'), name="select"),
@@ -40,8 +40,8 @@ urlpatterns = [
     path("plan_table/<int:plan_id>", core_views.plan_table, name="plan_table"),
     path("task_detail/<int:task_id>/", core_views.task_detail, name="task_detail"),
     path("api/chart/<int:plan_id>/", core_views.api_chart, name="api_chart"), # JSONレスポンス用
-    path("chart/<int:plan_id>/", TemplateView.as_view(template_name='dashboard/chart.html'), name="chart"), # 描画用
-    path("link/<int:plan_id>/", core_views.link, name="link"),
+    path("chart/<int:plan_id>/", core_views.chart, name="chart"), # 描画用
+    path("link/", core_views.link, name="link"),
 
     # OpenAI API
     path('request_ai_api/', core_views.request_ai_api, name="request_ai_api"),

@@ -10,8 +10,8 @@
 
 {% block content %}
 
-<form action="{% url 'regenerate' %}" method="POST" class="contents" id="plan-form">
-
+<form action="{% url 'request_ai_api' %}" method="POST" class="contents" id="plan-form">
+  {% csrf_token %}
   <!-- 画面上部説明 -->
   <div class="h-[30vh] p-8 pb-4 text-white flex flex-col items-center justify-center shrink-0">
       
@@ -45,6 +45,8 @@
     </div>
 
   </div>
+
+  <input type="hidden" name="regenerate" value="regenerate">
 </form>
 
 <!-- Loading Overlay -->

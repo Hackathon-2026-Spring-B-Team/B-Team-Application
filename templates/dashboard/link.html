@@ -1,0 +1,165 @@
+{% extends 'dashboard/base.html' %}
+
+{% load static %}
+
+{% block title %}プラン詳細{% endblock %}
+
+{% block planname %}{{ plan_name }}{% endblock %}
+
+{% block content %}
+
+
+
+
+<!-- トグル部分 -->
+{% for plan in plans %}
+<div class="mt-8 space-y-4">
+  
+  <!-- 期間別タスクのトグル -->
+  <details class="group bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+
+    <!-- 常時表示の押して開閉する部分 -->
+    <summary class="flex justify-between items-center font-bold p-4 cursor-pointer list-none select-none text-gray-900 bg-gray-50 group-open:bg-white transition-colors">
+      {{ plan.plan_name }}
+      <span class="material-symbols-rounded transition-transform duration-300 group-open:rotate-180 text-gray-400">expand_more</span>
+    </summary>
+    <!-- トグルの中身 -->
+    <div class="p-4 border-t border-gray-100 bg-white">
+
+        {% for link in plan.links.all %}
+            <div class="flex">
+                <div class="flex-1">
+                    <a href="{{ link.url }}" class="mb-3 flex-1 bg-white border-b border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors py-3 font-bold text-center text-sm shadow-sm flex items-center justify-center">
+                        {{ link.link_name }}
+                    </a>
+                </div>
+                <!-- 削除ボタン -->
+                <button type="button" class="my-3 ml-3 deleteOpenBtn flex items-center justify-center text-gray-300 hover:text-negative-red transition rounded-full active:bg-gray-100 shrink-0" data-url="{% url 'delete_plan' plan.id %}">
+                    <span class="material-symbols-rounded text-2xl items-center">delete</span>
+                </button>
+            </div>
+
+        {% endfor %}
+
+        <!-- 変更: 各planごとのタスク追加ボタン -->
+        <div class="flex justify-end">
+        <button type="button"
+                onclick="openTaskModal('{{ plan.id }}', '{{ plan.plan_name|escapejs }}')"
+                class="inline-flex items-center justify-center w-8 h-8 text-black text-2xl hover:bg-gray-100 rounded-full transition">
+            <span>＋</span>
+        </button>
+        </div>
+
+    </div>
+  </details>
+
+
+</div>
+{% endfor %}
+
+
+<!-- 変更: BootstrapモーダルではなくTailwindモーダル -->
+<dialog id="taskModal"
+        class="backdrop:bg-black/40 rounded-2xl p-0 w-full max-w-lg shadow-xl">
+
+  <form method="POST"
+        action=""
+        id="taskForm"
+        class="bg-white rounded-2xl overflow-hidden">
+
+    {% csrf_token %}
+
+    <!-- 変更: どのplanに追加するか送る -->
+    <input type="hidden" id="planIdInput" name="plan_id">
+    {% comment %} <input type="hidden" id="taskIdInput" name="task_id"> {% endcomment %}
+
+    <div class="flex items-center justify-between px-6 py-4 border-b">
+      <h2 class="text-lg font-bold text-gray-900">
+        新しいリンクを追加
+      </h2>
+
+      <button type="button"
+              onclick="closeTaskModal()"
+              class="text-gray-400 hover:text-gray-700">
+        ✕
+      </button>
+    </div>
+
+    <div class="p-6 space-y-4">
+
+      <div>
+        <label class="block text-sm font-bold text-gray-700 mb-1">
+          選択中のプラン
+        </label>
+        <p id="selectedPlanName" class="text-sm text-gray-600"></p>
+      </div>
+
+      <div>
+        <label for="taskTitleInput" class="block text-sm font-bold text-gray-700 mb-1">
+          リンク名
+        </label>
+        <input type="text"
+               id="taskTitleInput"
+               name="link_name"
+               required
+               class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+      </div>
+
+      <div>
+        <label for="taskTitleInput" class="block text-sm font-bold text-gray-700 mb-1">
+          URL
+        </label>
+        <input type="text"
+               id="taskTitleInput"
+               name="url"
+               required
+               class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+      </div>
+
+    </div>
+
+    <div class="flex justify-end gap-3 px-6 py-4 border-t bg-gray-50">
+      <button type="button"
+              onclick="closeTaskModal()"
+              class="px-4 py-2 rounded-lg bg-white border border-gray-300 text-gray-700 font-bold hover:bg-gray-100">
+        キャンセル
+      </button>
+
+      <button type="submit"
+              class="px-4 py-2 rounded-lg bg-green-600 text-white font-bold hover:bg-green-700">
+        追加する
+      </button>
+    </div>
+
+  </form>
+</dialog>
+
+
+
+
+ 
+
+{% endblock %}
+
+{% block extra_js %}
+
+  <!-- 変更: モーダル開閉用JS -->
+<script>
+  const taskModal = document.getElementById('taskModal');
+  const planIdInput = document.getElementById('planIdInput');
+  const selectedPlanName = document.getElementById('selectedPlanName');
+
+  function openTaskModal(planId, planName) {
+    planIdInput.value = planId;
+    selectedPlanName.textContent = planName;
+    taskModal.showModal();
+  }
+
+  function closeTaskModal() {
+    taskModal.close();
+  }
+</script>
+{% endblock %}
+
+
+
