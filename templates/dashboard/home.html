@@ -51,7 +51,7 @@
         <!-- 期間 -->
         <div class="text-gray-600 flex items-center gap-2">
           <span class="bg-gray-100 px-2 py-1 rounded font-medium">期間</span>
-          <span>{{ task.task_start_date }}〜{{ task.task_end_date }}</span>
+          <span>{{ task.task_start_date|date:"Y年n月j日" }}〜{{ task.task_end_date|date:"Y年n月j日" }}</span>
         </div>
 
       </a>
