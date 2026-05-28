@@ -44,13 +44,26 @@ class Task(ModelBaseClass):
         return self.title
     
 class TaskDetail(ModelBaseClass):
+
+    EVALUATION_CHOICES = [
+        (0, '未実施'),
+        (1, '分からない'),
+        (2, 'なんとなく'),
+        (3, '理解した'),
+    ]
+
     task = models.OneToOneField(
         Task,
         on_delete=models.CASCADE,
         related_name='task_detail'
     )
-    evaluation=models.IntegerField(default=0, null=False)
-    memo=models.TextField()
+    
+    evaluation=models.IntegerField(
+        default=0,
+        null=False,
+        choices=EVALUATION_CHOICES
+    )
+    memo=models.TextField(null=True)
 
 class Link(ModelBaseClass):
     # task_detail=models.ForeignKey(
@@ -68,6 +81,7 @@ class Link(ModelBaseClass):
         blank=False
     )
     url = models.TextField()
+    link_name = models.TextField()
 
     def __str__(self):
         return self.url

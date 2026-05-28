@@ -1,19 +1,17 @@
-{% load static %}
-
 {% extends 'dashboard/base.html' %}
 
-{% block title %}プラン詳細{% endblock %}
+{% load static %}
 
-{% block planname %}{{ plan_name }}{% endblock %}
+{% block title %}プラン詳細{% endblock %}
 
 {% block content %}
 
 <!-- 画面遷移用ボタンコンテナ -->
 <div class="flex gap-4 mb-8">
-  <a href="{% url 'plan_table'%}" class="flex-1 bg-green-600 text-white transition-colors py-3 rounded-xl font-bold text-center text-sm shadow-md flex items-center justify-center">
+  <a href="{% url 'plan_table' plan.id %}" class="flex-1 bg-green-600 text-white transition-colors py-3 rounded-xl font-bold text-center text-sm shadow-md flex items-center justify-center">
     ロードマップ
   </a>
-  <a href="{% url 'plan_table'%}" class="flex-1 bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors py-3 rounded-xl font-bold text-center text-sm shadow-sm flex items-center justify-center">
+  <a href="{% url 'chart' plan.id %}" class="flex-1 bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors py-3 rounded-xl font-bold text-center text-sm shadow-sm flex items-center justify-center">
     進捗グラフ
   </a>
 </div>
@@ -25,27 +23,27 @@
 
 <!-- 本日のタスクカード -->
 <div class="bg-white rounded-xl shadow-md p-4 mb-4 border border-gray-100 text-xs">
-  <a class="block space-y-2 hover:opacity-70 transition" href="{% url 'task_detail' plan.task.task.id %}">
+  <a class="block space-y-2 hover:opacity-70 transition" href="{% url 'task_detail' today_task.id %}">
 
     <!-- タスク名 -->
-    <div class="font-bold text-gray-900 text-base">基礎理論：情報の基礎理論</div>
+    <div class="font-bold text-gray-900 text-base">{{ today_task.title }}</div>
 
     <!-- 種類 -->
     <div class="text-gray-600 flex items-center gap-2">
       <span class="bg-gray-100 px-2 py-1 rounded font-medium">種類</span>
-      <span>確認・レビュー</span>
+      <span>{{ today_task.genre }}</span>
     </div>
     
     <!-- 理解度 -->
     <div class="text-gray-600 flex items-center gap-2">
       <span class="bg-gray-100 px-2 py-1 rounded font-medium">理解度</span>
-      <span class="text-negative-red font-bold">未実施</span>
+      <span class="text-negative-red font-bold">{{ today_task.task_detail.get_evaluation_display  }}</span>
     </div>
 
     <!-- 期間 -->
     <div class="text-gray-600 flex items-center gap-2">
       <span class="bg-gray-100 px-2 py-1 rounded font-medium">期間</span>
-      <span>2026-05-01〜2026-05-01</span>
+      <span>{{ today_task.task_start_date|date:"Y年n月j日" }}〜{{ today_task.task_end_date|date:"Y年n月j日" }}</span>
     </div>
 
   </a>
@@ -67,7 +65,7 @@
     <div class="p-4 border-t border-gray-100 bg-white">
 
       <!-- フィルターボタン -->
-      <div class="flex gap-2 overflow-x-auto no-scrollbar mb-4 pb-2 filter-container">
+      <div class="flex gap-2 overflow-x-auto no-scrollbar mb-4 pb-2 filter-container" data-filter-type="period">
         <button class="filter-btn px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-colors bg-green-600 text-white" data-target="all">すべて</button>
         <button class="filter-btn px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-colors bg-white text-gray-600 border border-gray-200" data-target="遅延">遅延</button>
         <button class="filter-btn px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-colors bg-white text-gray-600 border border-gray-200" data-target="これまで">これまで</button>
@@ -75,9 +73,12 @@
       </div>
       
       <!-- カードを表示 -->
-      {% for task in plan.tasks %}
-      <div class="task-card bg-white rounded-xl shadow-md p-4 mb-4 border border-gray-100 text-xs" data-filter-value="わからない">
-        <a class="block space-y-2 hover:opacity-70 transition" href="#">
+      {% for task in plan.tasks.all %}
+      <div class="task-card bg-white rounded-xl shadow-md p-4 mb-4 border border-gray-100 text-xs" 
+            data-start-date="{{ task.task_start_date|date:'Y-m-d' }}"
+            data-end-date="{{ task.task_end_date|date:'Y-m-d' }}"
+            data-evaluation="{{ task.task_detail.evaluation }}">
+        <a class="block space-y-2 hover:opacity-70 transition" href="{% url 'task_detail' task.id %}">
 
           <!-- タスク名 -->
           <div class="font-bold text-gray-900 text-base">{{ task.title }}</div>
@@ -91,17 +92,17 @@
           <!-- 理解度 -->
           <div class="text-gray-600 flex items-center gap-2">
             <span class="bg-gray-100 px-2 py-1 rounded font-medium">理解度</span>
-            <span class="text-negative-red font-bold">{{ task.evaluation }}</span>
+            <span class="text-negative-red font-bold">{{ task.task_detail.get_evaluation_display  }}</span>
           </div>
 
           <!-- 期間 -->
           <div class="text-gray-600 flex items-center gap-2">
             <span class="bg-gray-100 px-2 py-1 rounded font-medium">期間</span>
-            <span>{{ task.task_start_date }}〜{{ task.task_end_date }}</span>
+            <span>{{ task.task_start_date|date:"Y年n月j日" }}〜{{ task.task_end_date|date:"Y年n月j日" }}</span>
           </div>
-
         </a>
       </div>
+      {% endfor %}
 
     </div>
   </details>
@@ -119,18 +120,21 @@
     <div class="p-4 border-t border-gray-100 bg-white">
 
       <!-- フィルターボタン -->
-      <div class="flex gap-2 overflow-x-auto no-scrollbar mb-4 pb-2 filter-container">
+      <div class="flex gap-2 overflow-x-auto no-scrollbar mb-4 pb-2 filter-container" data-filter-type="evaluation">
         <button class="filter-btn px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-colors bg-green-600 text-white" data-target="all">すべて</button>
-        <button class="filter-btn px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-colors bg-white text-gray-600 border border-gray-200" data-target="わからない">わからない</button>
-        <button class="filter-btn px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-colors bg-white text-gray-600 border border-gray-200" data-target="なんとなく">なんとなく</button>
-        <button class="filter-btn px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-colors bg-white text-gray-600 border border-gray-200" data-target="理解した">理解した</button>
-        <button class="filter-btn px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-colors bg-white text-gray-600 border border-gray-200" data-target="未実施">未実施</button>
+        <button class="filter-btn px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-colors bg-white text-gray-600 border border-gray-200" data-target="1">わからない</button>
+        <button class="filter-btn px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-colors bg-white text-gray-600 border border-gray-200" data-target="2">なんとなく</button>
+        <button class="filter-btn px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-colors bg-white text-gray-600 border border-gray-200" data-target="3">理解した</button>
+        <button class="filter-btn px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-colors bg-white text-gray-600 border border-gray-200" data-target="0">未実施</button>
       </div>
       
       <!-- カードを表示 -->
-      {% for task in plan.tasks %}
-      <div class="task-card bg-white rounded-xl shadow-md p-4 mb-4 border border-gray-100 text-xs" data-filter-value="わからない">
-        <a class="block space-y-2 hover:opacity-70 transition" href="#">
+      {% for task in plan.tasks.all %}
+      <div class="task-card bg-white rounded-xl shadow-md p-4 mb-4 border border-gray-100 text-xs" 
+            data-start-date="{{ task.task_start_date|date:'Y-m-d' }}"
+            data-end-date="{{ task.task_end_date|date:'Y-m-d' }}"
+            data-evaluation="{{ task.task_detail.evaluation }}">
+        <a class="block space-y-2 hover:opacity-70 transition" href="{% url 'task_detail' task.id %}">
 
           <!-- タスク名 -->
           <div class="font-bold text-gray-900 text-base">{{ task.title }}</div>
@@ -144,17 +148,18 @@
           <!-- 理解度 -->
           <div class="text-gray-600 flex items-center gap-2">
             <span class="bg-gray-100 px-2 py-1 rounded font-medium">理解度</span>
-            <span class="text-negative-red font-bold">{{ task.evaluation }}</span>
+            <span class="text-negative-red font-bold">{{ task.task_detail.get_evaluation_display  }}</span>
           </div>
 
           <!-- 期間 -->
           <div class="text-gray-600 flex items-center gap-2">
             <span class="bg-gray-100 px-2 py-1 rounded font-medium">期間</span>
-            <span>{{ task.task_start_date }}〜{{ task.task_end_date }}</span>
+            <span>{{ task.task_start_date|date:"Y年n月j日" }}〜{{ task.task_end_date|date:"Y年n月j日" }}</span>
           </div>
 
         </a>
       </div>
+      {% endfor %}
     </div>
   </details>
 

@@ -1,21 +1,20 @@
 {% extends 'base.html' %}
 
+{% load static %}
+
 {% block main_layout %}
-  <main class="max-w-md mx-auto h-screen w-full bg-gradient-to-tr from-[#116329] to-[#002d11] text-gray-900 flex flex-col">
+  <main class="max-w-md mx-auto h-screen w-full bg-gray-50 text-gray-900 flex flex-col">
     
     <!-- 画面上部のアプリ名などを表示するヘッダー -->
     <header class="h-16 shrink-0 bg-white shadow-sm flex items-center  bg-gradient-to-r from-green-600 to-green-900">
       
       <!-- プラン詳細などの時はプラン名を表示 -->
-      {% if request.resolver_match.url_name == 'plan_table' or 
-            request.resolver_match.url_name == 'task_detail' or
-            request.resolver_match.url_name == 'plan_graph' %}
+      {% if request.resolver_match.url_name == 'plan_table' or request.resolver_match.url_name == 'task_detail' or request.resolver_match.url_name == 'chart' %}
         <img src="{% static 'images/logo_white.png' %}" alt="logo_white" class="h-16 w-auto">
       {% else %}
         <img src="{% static 'images/logo_header.png' %}" alt="logo_header" class="h-16 w-auto">
         <span class="text-white text-xl font-medium">
-          {% block planname %}
-          {% endblock %}
+          {{ plan.plan_name }}
         </span>
       {% endif %}
 
@@ -39,11 +38,13 @@
         <span class="material-symbols-rounded text-3xl">add</span>
         <span class="font-bold mt-1">新規</span>
       </a>
-      <a href="{% url 'link_list' %}" 
+      {% comment %} <a href="{% url 'link_list' %}"  {% endcomment %}
+      <a href="" 
           class="flex flex-col items-center text-xs transition {% if request.resolver_match.url_name == 'link_list' %}text-green-600{% else %}text-gray-400 hover:text-green-600{% endif %}">
         <span class="material-symbols-rounded text-3xl">link</span>
         <span class="font-bold mt-1">リンク</span>
       </a>
+      {% comment %} <a href="{% url 'menu' %}"  {% endcomment %}
       <a href="{% url 'menu' %}" 
           class="flex flex-col items-center text-xs transition {% if request.resolver_match.url_name == 'menu' %}text-green-600{% else %}text-gray-400 hover:text-green-600{% endif %}">
         <span class="material-symbols-rounded text-3xl">menu</span>

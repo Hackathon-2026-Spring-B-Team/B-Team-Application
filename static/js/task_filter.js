@@ -23,18 +23,62 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // 絞り込み処理（押されたボタンのトグルだけを取得）
       const target = button.getAttribute('data-target'); // フィルターボタンに設定されたターゲットを取得
+      const filterType = container.getAttribute('data-filter-type'); //フィルターのタイプを取得
+      
       const parentDetails = button.closest('details'); // 自分がいるトグルを取得
       const cardsInThisToggle = parentDetails.querySelectorAll('.task-card'); // その中のカードだけを取得
+      
+      // 今日の日付を取得
+      const today = new Date();
+      const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
       
       // カードの判別と表示・非表示
       cardsInThisToggle.forEach(card => {
 
-        const filterValue = card.getAttribute('data-filter-value'); // カードに設定しているフィルター用の値を取得
-        if (target === 'all' || target === filterValue) {
+        const endDate = card.getAttribute('data-end-date');
+        const evaluation = card.getAttribute('data-evaluation')
+
+
+        let isShow = false;
+
+        if (target === 'all') {
+          isShow = true;
+        } 
+
+        // 期間別フィルター用処理
+        else if (filterType === 'period') {
+          
+          if (target === '遅延') {
+            if (endDate < todayStr && evaluation === '0') {
+              isShow = true;
+            }
+          } 
+          else if (target === 'これまで') {
+            if (endDate < todayStr || evaluation !== '0') {
+              isShow = true;
+            }
+          } 
+          else if (target === 'これから') {
+            if (endDate >= todayStr && evaluation === '0') {
+              isShow = true;
+            }
+          }
+        } 
+
+        // 理解度別フィルター用処理
+        else if (filterType === 'evaluation') {
+          if (target === evaluation) {
+            isShow = true;
+          }
+        }
+
+        // 表示・非表示の切り替え
+        if (isShow) {
           card.style.display = 'block';
         } else {
           card.style.display = 'none';
         }
+
       });
 
     });

@@ -1,8 +1,50 @@
 {% extends 'base.html' %}
 
+{% load static %}
+
 {% block main_layout %}
-    <main class="max-w-md mx-auto h-screen w-full bg-gradient-to-tr from-[#116329] to-[#002d11] text-gray-900 flex flex-col">
+    <main class="relative max-w-md mx-auto h-screen w-full bg-gradient-to-tr from-[#116329] to-[#002d11] text-gray-900 flex flex-col">
+      
+      <!-- プラン生成中止ボタン -->
+      <button type="button" id="cancelOpenBtn" class="absolute top-4 left-4 text-white p-2 hover:opacity-70 transition-opacity z-10">
+        <span class="material-symbols-rounded text-3xl">close</span>
+      </button>
+
       {% block content %}
       {% endblock %}
+
+      <!-- プラン作成中止モーダル -->
+      <div id="cancelModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden opacity-0 transition-opacity duration-300">
+        <!-- モーダルのカード本体 -->
+        <div id="cancelModalCard" class="bg-white rounded-2xl shadow-xl w-11/12 max-w-sm p-6 transform scale-95 transition-transform duration-300">
+          
+          <!-- モーダルのメッセージ -->
+          <div class="flex flex-col items-center text-center space-y-3 mb-6">
+            <div class="flex items-center justify-center">
+              <span class="material-symbols-rounded text-negative-red text-2xl">warning</span>
+              <h3 class="text-lg font-bold text-gray-900">プラン作成を中止しますか？</h3>
+            </div>
+            <p class="text-sm text-gray-600">現在入力中の内容はすべて破棄され、<br>ホーム画面に戻ります</p>
+          </div>
+          
+          <!-- モーダルのボタンコンテナ-->
+          <div class="flex gap-3 w-full m-0">
+            <button type="button" id="cancelCloseBtn" class="flex-1 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold text-sm hover:bg-gray-200 transition-colors">
+              キャンセル
+            </button>
+            
+            <a href="{% url 'home'%}" class="flex-1 py-3 bg-negative-red text-white rounded-xl font-bold text-sm shadow-md hover:bg-red-700 transition-colors flex items-center justify-center">
+              中止
+            </a>
+          </div>
+      
+        </div>
+      </div>
+
     </main>
+{% endblock %}
+
+{% block extra_js %}
+  <script src="{% static 'js/stop_createplan_modal.js' %}"></script>
+  <script src="{% static 'js/plan_select.js' %}"></script>
 {% endblock %}

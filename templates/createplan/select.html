@@ -1,10 +1,14 @@
+
 {% extends 'createplan/base.html' %}
+{% load static %}
+
 {% load static %}
 
 {% block title %}プランの選択{% endblock %}
 
 {% block content %}
-<form action="{% url 'select' %}" method="POST" class="flex-1 flex flex-col overflow-hidden">
+<form action="{% url 'select' %}" method="POST" class="contents">
+  {% csrf_token %}
 
   <!-- 画面上部説明 -->
   <div class="h-[30vh] p-8 pb-4 text-white flex flex-col items-center justify-center shrink-0">
@@ -33,13 +37,13 @@
       <div id="carousel" class="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-2 no-scrollbar flex-1 items-stretch">
         {% for plan in plans %}
 
-        <!-- プラン表示部 -->
-        <div data-index="{{ plan.index }}" class="plan-card snap-center shrink-0 w-full border border-gray-200 rounded-2xl bg-gray-50 flex flex-col h-full shadow-md">
+        <!-- プラン表示部.  plan.indexが存在しない為、forloop.counter0にすることでforループの番号をindexにする -->
+        <div data-index="{{ forloop.counter0 }}" class="plan-card snap-center shrink-0 w-full border border-gray-200 rounded-2xl bg-gray-50 flex flex-col h-full shadow-md">
 
             <!-- プラン名 -->
             <div class="p-4 border-b bg-green-50/80 rounded-t-2xl flex justify-between items-center shrink-0">
                 <h2 class="font-bold text-lg">{{ plan.planname }}</h2>
-                <span class="text-xs font-bold text-green-600 bg-green-100 px-2 py-1 rounded-full">{{ plan.index }}</span>
+                <span class="text-xs font-bold text-green-600 bg-green-100 px-2 py-1 rounded-full">{{ forloop.counter }}</span>
             </div>
             
             <!-- タスクカード表示部 -->
@@ -61,7 +65,7 @@
                 <!-- 期間 -->
                 <div class="text-xs text-gray-600 flex items-center gap-2">
                   <span class="bg-gray-100 px-2 py-1 rounded text-xs font-medium">期間</span>
-                  <span>{{ task.task_start_date }}〜{{ task.task_end_date }}</span>
+                  <span>{{ task.start_date }}〜{{ task.end_date }}</span>
                 </div>
 
               </div>
@@ -85,8 +89,4 @@
       </div>
   </div>
 </form>
-{% endblock %}
-
-{% block extra_js %}
-  <script src="{% static 'js/plan_select.js' %}"></script>
 {% endblock %}

@@ -1,11 +1,13 @@
 {% extends 'createplan/base.html' %}
 {% load static %}
 
+{% load static %}
+
 {% block title %}情報入力{% endblock %}
 
 {% block content %}
 <!-- URLの設定お願いします -->
-<form action="{% url 'form' %}" method="POST" class="flex-1 flex flex-col overflow-hidden">
+<form action="{% url 'request_ai_api' %}" method="POST" class="contents" id="plan-form">
   {% csrf_token %}
 
   <!-- 画面上部説明 -->
@@ -57,4 +59,27 @@
 
   </div>
 </form>
+
+<!-- Loading Overlay -->
+<div id="loading-overlay"
+     class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+
+    <div class="bg-white p-8 rounded-2xl flex flex-col items-center shadow-lg">
+        <!-- spinner -->
+        <div class="w-12 h-12 border-4 border-gray-300 border-t-[#116329] rounded-full animate-spin"></div>
+
+        <p class="mt-4 text-gray-700 font-medium">
+            学習プランを生成中...
+        </p>
+        <p class="text-sm text-gray-500 mt-1">
+            少々お待ちください
+        </p>
+    </div>
+</div>
+
+<script>
+document.getElementById('plan-form').addEventListener('submit', function() {
+    document.getElementById('loading-overlay').classList.remove('hidden');
+});
+</script>
 {% endblock %}

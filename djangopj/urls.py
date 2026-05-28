@@ -28,13 +28,20 @@ urlpatterns = [
     # path("select/", TemplateView.as_view(template_name='select.html'), name="select"),
     path("regenerate/", TemplateView.as_view(template_name='createplan/regenerate.html'), name="regenerate"),
     path("home/", core_views.home, name="home"),
-    path("chart/", TemplateView.as_view(template_name='dashboard/chart.html'), name="chart"),
+    path("menu/", core_views.menu, name="menu"),
+    path("delete_plan/<int:plan_id>", core_views.delete_plan, name="delete_plan"),
+    #path("chart/", TemplateView.as_view(template_name='dashboard/chart.html'), name="chart"),
     #path("login/", TemplateView.as_view(template_name='login.html'), name="login"),
     #path("signup/", TemplateView.as_view(template_name='signup.html'), name="signup"),
     path("login/", core_views.signin, name="signin"), # loginという命名だとdjangoの予約語loginと被る
     path("signup/", core_views.signup, name="signup"),
     path("logout/", core_views.signout, name="signout"),
     path("select/", core_views.select, name="select"),
+    path("plan_table/<int:plan_id>", core_views.plan_table, name="plan_table"),
+    path("task_detail/<int:task_id>/", core_views.task_detail, name="task_detail"),
+    path("api/chart/<int:plan_id>/", core_views.api_chart, name="api_chart"), # JSONレスポンス用
+    path("chart/<int:plan_id>/", TemplateView.as_view(template_name='dashboard/chart.html'), name="chart"), # 描画用
+    path("link/<int:plan_id>/", core_views.link, name="link"),
 
     # OpenAI API
     path('request_ai_api/', core_views.request_ai_api, name="request_ai_api"),

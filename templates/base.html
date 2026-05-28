@@ -21,12 +21,23 @@
     
     <!-- スクロールバー非表示 -->
     <style>
-      .no-scrollbar::-webkit-scrollbar { display: none; }
-      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  
+      /* Chrome, Safari, Edge用 */
+      *::-webkit-scrollbar { 
+        display: none; 
+      }
+      
+      /* IE, Firefox用 */
+      * { 
+        -ms-overflow-style: none; 
+        scrollbar-width: none; 
+      }
     </style>
+
   </head>
 
   <body>
     {% block main_layout %}{% endblock %}
+    {% block extra_js %}{% endblock %}
   </body>
 </html>
