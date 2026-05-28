@@ -29,13 +29,13 @@
         {% for link in plan.links.all %}
             <div class="flex">
                 <div class="flex-1">
-                    <a href="{{ link.url }}" class="mb-3 flex-1 bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors py-3 rounded-xl font-bold text-center text-sm shadow-sm flex items-center justify-center">
+                    <a href="{{ link.url }}" class="mb-3 flex-1 bg-white border-b border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors py-3 font-bold text-center text-sm shadow-sm flex items-center justify-center">
                         {{ link.link_name }}
                     </a>
                 </div>
                 <!-- 削除ボタン -->
-                <button type="button" class="deleteOpenBtn flex items-center justify-center text-gray-300 hover:text-negative-red transition rounded-full active:bg-gray-100 shrink-0" data-url="{% url 'delete_plan' plan.id %}">
-                    <span class="material-symbols-rounded text-2xl">delete</span>
+                <button type="button" class="my-3 ml-3 deleteOpenBtn flex items-center justify-center text-gray-300 hover:text-negative-red transition rounded-full active:bg-gray-100 shrink-0" data-url="{% url 'delete_plan' plan.id %}">
+                    <span class="material-symbols-rounded text-2xl items-center">delete</span>
                 </button>
             </div>
 
