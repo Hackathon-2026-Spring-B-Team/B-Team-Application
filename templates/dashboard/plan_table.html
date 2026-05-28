@@ -131,7 +131,7 @@
       
       <!-- カードを表示 -->
       {% for task in plan.tasks.all %}
-      <div class="task-card bg-white rounded-xl shadow-md p-4 mb-4 border border-gray-100 text-xs" data-filter-value="わからない">
+      <div class="task-card bg-white rounded-xl shadow-md p-4 mb-4 border border-gray-100 text-xs" data-filter-value="{{ task.task_detail.evaluation  }}">
         <a class="block space-y-2 hover:opacity-70 transition" href="{% url 'task_detail' task.id %}">
 
           <!-- タスク名 -->
