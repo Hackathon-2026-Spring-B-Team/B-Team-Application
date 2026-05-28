@@ -411,10 +411,16 @@ async def chart(request, plan_id):
             'understood': round(row['understood'] / total * 100),
         })
 
-    return JsonResponse({
+    return render(request, 'dashboard/plan_table.html', {
         'subjects': subjects,
         'data': data,
+        'plan_id': plan_id
     })
+
+    # return JsonResponse({
+    #     'subjects': subjects,
+    #     'data': data,
+    # })
 
 
 def link(request, plan_id):
