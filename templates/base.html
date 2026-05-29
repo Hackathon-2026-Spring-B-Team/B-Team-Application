@@ -1,0 +1,46 @@
+{% load static %}
+
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- フォントの追加 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
+    
+    <title>{% block title %}{% endblock %} | METIS</title>
+
+    <!-- ファビコン -->
+    <link rel="icon" href="{% static 'images/favicon.ico' %}">
+    
+    <!-- tailwind本体 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- カラー,フォント設定 -->
+    <script src="{% static 'js/tailwind_config.js' %}"></script>
+    
+    <!-- スクロールバー非表示 -->
+    <style>
+  
+      /* Chrome, Safari, Edge用 */
+      *::-webkit-scrollbar { 
+        display: none; 
+      }
+      
+      /* IE, Firefox用 */
+      * { 
+        -ms-overflow-style: none; 
+        scrollbar-width: none; 
+      }
+    </style>
+
+  </head>
+
+  <body>
+    {% block main_layout %}{% endblock %}
+    {% block extra_js %}{% endblock %}
+  </body>
+</html>

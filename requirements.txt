@@ -1,0 +1,6 @@
+Django==5.0 
+mysqlclient
+gunicorn==25.3.0
+# .envを読み込めるようにする
+django-environ
+openai

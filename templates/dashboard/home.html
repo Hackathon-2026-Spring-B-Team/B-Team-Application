@@ -1,0 +1,113 @@
+{% extends 'dashboard/base.html' %}
+
+{% load static %}
+
+{% block title %}ホーム{% endblock %}
+
+{% block content %}
+
+  <!-- プランがある時表示する -->
+  <h1 class="text-2xl font-bold text-gray-900 mb-5">
+    本日の学習
+  </h1>
+  
+
+  <!-- プラン名コンテナ -->
+  {% for plan in plans %}
+  <div class="flex items-center justify-between w-full">
+    <!-- プラン名 -->
+    <a class="flex items-center gap-1 text-green-600 font-bold text-lg hover:opacity-70 transition w-fit" href="{% url 'plan_table' plan.id %}">
+      <span>{{ plan.plan_name }}</span>
+      <span class="material-symbols-rounded text-2xl">chevron_right</span>
+    </a>
+    <!-- 削除ボタン -->
+    <button type="button" class="deleteOpenBtn flex items-center justify-center text-gray-300 hover:text-negative-red transition rounded-full active:bg-gray-100 shrink-0" data-url="{% url 'delete_plan' plan.id %}">
+      <span class="material-symbols-rounded text-2xl">delete</span>
+    </button>
+  
+  </div>
+
+  <!-- タスクカード -->
+  {% comment %} {% for task in today_tasks %} {% endcomment %}
+  {% for task in plan.today_tasks %}
+  <div class="bg-white rounded-xl shadow-md p-4 mb-4 border border-gray-100 text-xs">
+      <a class="block space-y-2 hover:opacity-70 transition" href="{% url 'task_detail' task.id %}">
+      {% comment %} <a class="block space-y-2 hover:opacity-70 transition" href=""> {% endcomment %}
+        <!-- タスク名 -->
+        <div class="font-bold text-gray-900 text-base">{{ task.title }}</div>
+
+        <!-- 種類 -->
+        <div class="text-gray-600 flex items-center gap-2">
+          <span class="bg-gray-100 px-2 py-1 rounded font-medium">種類</span>
+          <span>{{ task.genre }}</span>
+        </div>
+        
+        <div class="text-gray-600 flex items-center gap-2">
+          <span class="bg-gray-100 px-2 py-1 rounded font-medium">理解度</span>
+          
+          <!-- わからない -->
+          {% if task.task_detail.evaluation == 1 %} 
+            <span class="text-negative-red font-bold">{{ task.task_detail.get_evaluation_display }}</span>
+
+            <!-- なんとなく -->
+          {% elif task.task_detail.evaluation == 2 %}
+            <span class="text-green-300 font-bold">{{ task.task_detail.get_evaluation_display }}</span>
+            
+            <!-- 理解した -->
+          {% elif task.task_detail.evaluation == 3 %}
+            <span class="text-green-600 font-bold">{{ task.task_detail.get_evaluation_display }}</span>
+            
+            <!-- 未実施 -->
+          {% elif task.task_detail.evaluation == 0 %}
+            <span class="text-gray-300 font-bold">{{ task.task_detail.get_evaluation_display }}</span>
+
+          {% endif %} 
+        </div>
+
+        <!-- 期間 -->
+        <div class="text-gray-600 flex items-center gap-2">
+          <span class="bg-gray-100 px-2 py-1 rounded font-medium">期間</span>
+          <span>{{ task.task_start_date|date:"Y年n月j日" }}〜{{ task.task_end_date|date:"Y年n月j日" }}</span>
+        </div>
+
+      </a>
+  </div>
+  {% endfor %}
+  {% empty %}
+  <h2 class="text-green-600 font-bold text-lg">現在学習中プランがありません</h2>
+  <div class="text-gray-600 text-base">画面下部の新規ボタンからプランを作成してください</div>
+  {% endfor %}
+
+  <!-- プラン削除モーダル-->
+  <div id="deleteModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden opacity-0 transition-opacity duration-300">
+    <!-- モーダルのカード本体 -->
+    <div id="deleteModalCard" class="bg-white rounded-2xl shadow-xl w-11/12 max-w-sm p-6 transform scale-95 transition-transform duration-300">
+      
+      <!-- モーダルのメッセージ -->
+      <div class="flex flex-col items-center text-center space-y-3 mb-6">
+        <div class="flex items-center justify-center">
+          <span class="material-symbols-rounded text-negative-red text-2xl">warning</span>
+          <h3 class="text-lg font-bold text-gray-900">プランを削除しますか？</h3>
+        </div>
+        <p class="text-sm text-gray-600">この操作は取り消せません。<br>削除した場合、タスクの実績などは破棄されます</p>
+      </div>
+      
+      <!-- モーダルのボタンコンテナ兼フォーム-->
+      <form id="deleteForm" method="POST" action="" class="flex gap-3 w-full m-0">
+        {% csrf_token %}
+  
+        <button type="button" id="deleteCancelBtn" class="flex-1 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold text-sm hover:bg-gray-200 transition-colors">
+          キャンセル
+        </button>
+        
+        <button type="submit" id="deleteConfirmBtn" class="flex-1 py-3 bg-negative-red text-white rounded-xl font-bold text-sm shadow-md hover:bg-red-700 transition-colors">
+          削除
+        </button>
+      </form>
+    </div>
+  </div>
+{% endblock %}
+
+{% block extra_js %}
+  <script src="{% static 'js/delete_modal.js' %}"></script>
+{% endblock %}

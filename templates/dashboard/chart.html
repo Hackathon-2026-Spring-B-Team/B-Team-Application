@@ -1,0 +1,169 @@
+{% extends 'dashboard/base.html' %}
+
+{% load static %}
+
+{% block title %}進捗グラフ{% endblock %}
+
+{% block content %}
+<!-- 画面遷移用ボタンコンテナ -->
+<div class="flex gap-4 mb-8">
+  <a href="{% url 'plan_table' plan_id%}" class="flex-1 bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors py-3 rounded-xl font-bold text-center text-sm shadow-sm flex items-center justify-center">
+    ロードマップ
+  </a>
+  <a href="{% url 'chart' plan_id%}" class="flex-1 bg-green-600 text-white transition-colors py-3 rounded-xl font-bold text-center text-sm shadow-md flex items-center justify-center">
+    進捗グラフ
+  </a>
+</div>
+
+<!-- 単元別グラフカード -->
+<div class="bg-white rounded-xl shadow-md p-5 border border-gray-100 mb-2">
+  
+  <h2 class="text-lg font-bold mb-5 text-gray-900">
+    単元別グラフ
+  </h2>
+
+  <!-- グラフコンテナ -->
+  <div class="relative h-[300px] w-full">
+    <canvas id="progressChart"></canvas>
+  </div>
+
+</div>
+
+<!-- 詳細情報セクション -->
+<div id="detailSection" class="mt-6 md:mt-8 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 hidden">
+  <div class="bg-white rounded-2xl md:rounded-lg shadow-md p-5 md:p-6">
+      <h3 class="text-lg font-bold text-gray-800 mb-4">
+          学習進捗サマリー
+      </h3>
+      <div id="summaryContent" class="text-sm text-gray-700">
+          データ取得中...
+      </div>
+  </div>
+
+  <div class="bg-white rounded-2xl md:rounded-lg shadow-md p-5 md:p-6">
+      <h3 class="text-lg font-bold text-gray-800 mb-4">
+          次のステップ
+      </h3>
+      <div id="nextStepsContent" class="text-sm text-gray-700">
+          データ取得中...
+      </div>
+  </div>
+</div>
+
+{% comment %} <script>
+    const PLAN_ID = "{{ plan.id }}";
+</script> {% endcomment %}
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{% static 'js/chart.js' %}"></script>
+{% endblock %}
+
+
+
+
+
+{% comment %} {% load static %}
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>進捗管理 | METIS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'BIZ UDPGothic', sans-serif;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50">
+    <!-- ヘッダー -->
+    <div class="bg-gradient-to-r from-green-700 to-green-800 text-white py-6 px-4 md:py-8 md:px-6">
+        <div class="flex items-center gap-3 md:gap-4">
+            <span class="text-3xl md:text-4xl">🎯</span>
+            <h1 class="text-xl md:text-3xl font-bold leading-snug">
+                基本情報技術者試験
+            </h1>
+        </div>
+    </div>
+
+    <div class="max-w-6xl mx-auto px-4 py-6 md:px-6 md:py-8">
+        <!-- ボタングループ -->
+        <div class="flex flex-col md:flex-row gap-3 md:gap-4 mb-6 md:mb-8">
+            <button id="roadmapBtn"
+                    class="w-full md:w-auto px-6 md:px-8 py-3 border-2 border-green-700 text-green-700 rounded-full font-bold hover:bg-green-50 transition">
+                ロードマップ
+            </button>
+
+            <button id="progressBtn"
+                    class="w-full md:w-auto px-6 md:px-8 py-3 bg-green-700 text-white rounded-full font-bold hover:bg-green-800 transition">
+                進捗グラフ
+            </button>
+        </div>
+
+        <!-- 単元別グラフセクション -->
+        <div id="chartSection" class="bg-white rounded-2xl md:rounded-lg shadow-md p-5 md:p-8">
+            <h2 class="text-xl md:text-2xl font-bold mb-5 md:mb-6 text-gray-800">
+                単元別グラフ
+            </h2>
+
+            <!-- レジェンド -->
+            <div class="grid grid-cols-2 md:flex gap-3 md:gap-8 mb-6 md:mb-8">
+                <div class="flex items-center gap-2">
+                    <div class="w-4 h-4 bg-gray-300 border border-gray-400"></div>
+                    <span class="text-sm text-gray-700">未実施</span>
+                </div>
+
+                <div class="flex items-center gap-2">
+                    <div class="w-4 h-4 bg-red-400"></div>
+                    <span class="text-sm text-gray-700">わからない</span>
+                </div>
+
+                <div class="flex items-center gap-2">
+                    <div class="w-4 h-4 bg-green-200"></div>
+                    <span class="text-sm text-gray-700">なんとなく</span>
+                </div>
+
+                <div class="flex items-center gap-2">
+                    <div class="w-4 h-4 bg-green-600"></div>
+                    <span class="text-sm text-gray-700">理解した</span>
+                </div>
+            </div>
+
+            <!-- チャート用コンテナ -->
+            <div class="relative h-[280px] md:h-[400px]">
+                <canvas id="progressChart"></canvas>
+            </div>
+        </div>
+
+        <!-- 詳細情報セクション -->
+        <div id="detailSection" class="mt-6 md:mt-8 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 hidden">
+            <div class="bg-white rounded-2xl md:rounded-lg shadow-md p-5 md:p-6">
+                <h3 class="text-lg font-bold text-gray-800 mb-4">
+                    学習進捗サマリー
+                </h3>
+                <div id="summaryContent" class="text-sm text-gray-700">
+                    データ取得中...
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl md:rounded-lg shadow-md p-5 md:p-6">
+                <h3 class="text-lg font-bold text-gray-800 mb-4">
+                    次のステップ
+                </h3>
+                <div id="nextStepsContent" class="text-sm text-gray-700">
+                    データ取得中...
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static 'js/chart.js' %}"></script>
+</body>
+</html> {% endcomment %}
