@@ -494,6 +494,13 @@ def link(request):
     #     'links': list(links.values())
     # })
 
+@login_required
+def delete_link(request, link_id):
+    link = Link.objects.filter(id=link_id).first()
+    link.delete()
+
+    return redirect('link')
+
 
 def _process_plans(ai_plans):
     """AI生成プランをフロントエンド用にフォーマット"""
