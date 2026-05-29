@@ -20,6 +20,11 @@ from core import views as core_views
 from django.contrib.auth import views as auth_views
 from django.views.generic import TemplateView
 
+# エラーページ
+handler400 = "core.views.custom_400"
+handler403 = "core.views.custom_403"
+handler404 = "core.views.custom_404"
+handler500 = "core.views.custom_500"
 
 urlpatterns = [
     path('admin/', admin.site.urls),

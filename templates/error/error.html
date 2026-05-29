@@ -1,0 +1,28 @@
+{% extends 'auth/base.html' %}
+
+{% load static %}
+
+{% block title %}エラーページ{% endblock %}
+
+{% block content %}
+<div class="w-full max-w-sm flex flex-col items-center">
+
+    <!-- ロゴ -->
+    <div class="w-1/3 mb-4">
+    <img src="{% static 'images/logo_name_green.png' %}" alt="logo_green" class="w-full h-auto">
+    </div>
+
+    <!-- タイトル文 -->
+    <h1 class="font-bold text-3xl text-green-600 tracking-wider mt-12">申し訳ありません</h1>
+
+    <!-- エラー文 -->
+    <p class="text-3xl pt-5">{{ error_status }}</p>
+    <p class="text-lg pt-5 text-center">{{ error_message }}</p>
+
+    <!-- ホーム画面遷移リンク -->
+    <a href="{% url 'home' %}" class="flex-1 bg-white border border-green-700 text-green-600 hover:bg-gray-50 transition-colors. mt-16 py-2 px-5 rounded-xl text-center text-xl flex items-center justify-center">
+    ホームへ戻る
+    </a>
+
+</div>
+{% endblock %}

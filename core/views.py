@@ -582,3 +582,28 @@ def _process_tasks_to_plans(tasks):
         plans.append(plan)
     
     return plans
+
+# エラーページ
+def custom_400(request, exception):
+    return render(request, "error/error.html",
+                    { "error_status": "400 Bad Request","error_message": "指定されたページを表示できません。" },
+                    status=400
+                )
+
+def custom_403(request, exception):
+    return render(request, "error/error.html",
+                    { "error_status": "403 Forbidden","error_message": "指定されたページを表示できません。" },
+                    status=403
+                )
+
+def custom_404(request, exception):
+    return render(request, "error/error.html",
+                    { "error_status": "404 Not Found","error_message": "ページが見つかりませんでした。" },
+                    status=404
+                )
+
+def custom_500(request):
+    return render(request, "error/error.html",
+                    { "error_status": "500 Internal Server Error", "error_message": "サーバー内部エラー、ページを表示できません。" },
+                    status=500
+                )
