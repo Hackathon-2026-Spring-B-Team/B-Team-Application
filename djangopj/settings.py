@@ -13,7 +13,6 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 import os
 import environ
 from pathlib import Path
-import environ # .nev読み込み用
 
 
 # instanceを作成
@@ -33,9 +32,6 @@ AI_API_KEY = env('AI_API_KEY')
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# .envを読み込む
-env = environ.Env()
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
@@ -44,7 +40,7 @@ env = environ.Env()
 SECRET_KEY = 'django-insecure-)_k6q-y)r2+xxo512)hrj(+5afpn76fwt@t+beiyb_a0ml3h0%'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
     'HackathonB-TeamLB-1856802156.ap-northeast-1.elb.amazonaws.com'
