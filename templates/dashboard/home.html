@@ -42,10 +42,26 @@
           <span>{{ task.genre }}</span>
         </div>
         
-        <!-- 理解度 -->
         <div class="text-gray-600 flex items-center gap-2">
           <span class="bg-gray-100 px-2 py-1 rounded font-medium">理解度</span>
-          <span class="text-negative-red font-bold">{{ task.task_detail.get_evaluation_display }}</span>
+          
+          <!-- わからない -->
+          {% if task.task_detail.evaluation == 1 %} 
+            <span class="text-negative-red font-bold">{{ task.task_detail.get_evaluation_display }}</span>
+
+            <!-- なんとなく -->
+          {% elif task.task_detail.evaluation == 2 %}
+            <span class="text-green-300 font-bold">{{ task.task_detail.get_evaluation_display }}</span>
+            
+            <!-- 理解した -->
+          {% elif task.task_detail.evaluation == 3 %}
+            <span class="text-green-600 font-bold">{{ task.task_detail.get_evaluation_display }}</span>
+            
+            <!-- 未実施 -->
+          {% elif task.task_detail.evaluation == 0 %}
+            <span class="text-gray-300 font-bold">{{ task.task_detail.get_evaluation_display }}</span>
+
+          {% endif %} 
         </div>
 
         <!-- 期間 -->
