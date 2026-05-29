@@ -1,4 +1,3 @@
-import random
 import os
 from datetime import timedelta, datetime
 from django.utils import timezone
@@ -16,6 +15,8 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from django.core import serializers
 from django.db.models import Prefetch, Count, Q
+from django.shortcuts import get_object_or_404
+
 
 # Create your views here.
 @login_required
@@ -32,12 +33,10 @@ def request_ai_api(request):
         request.session['plan_date'] = plan_date 
         daily_available_minutes = request.POST.get("study_hours", "").strip()
         request.session['daily_available_minutes'] = daily_available_minutes 
-        # prompt_option = request.session.get('prompt_option')
-        # request.session['prompt_option'] = [] # セッション（prompt_option）の値を初期化
         prompt = Prompt.generate_prompt(plan_name, plan_date, daily_available_minutes)
     elif request.method == "POST" and request.POST.get('regenerate') == 'regenerate':
-        plan_name = request.session.pop('plan_name', None)
-        plan_date = request.session.pop('plan_date', None)
+        plan_name = request.session.get('plan_name', None)
+        plan_date = request.session.get('plan_date', None)
         daily_available_minutes = request.session.pop('daily_available_minutes', None)   
         feedback = request.POST.get("feedback", "").strip()
         print(plan_name, plan_date, daily_available_minutes)
@@ -53,64 +52,15 @@ def request_ai_api(request):
     )
 
     data = json.loads(response.output_text)
-
-    print(data)
     
     # プランデータをセッションに保存して select へリダイレクト
     request.session['ai_generated_plans'] = data.get('plans', [])
     
     return redirect('select')
 
-    # Task.objects.create(
-    #     plan=plan,
-    #     genre=task_item.get("genre", ""),
-    #     title=task_item.get("title", ""),
-    #     is_active=False,
-    #     task_start_date=task_item.get("start"),
-    #     task_end_date=task_item.get("end"),
-    # )
-
-
-
-    # client = OpenAI(api_key=settings.AI_API_KEY)
-
-    # #APIを使ってリクエストを投げる
-    # response = client.responses.create(
-    #     model="gpt-5-nano",
-    #     input="おはよう！元気？",
-    #     store=True
-    # )
-
-    # print(response.output_text)
-
-    # json = {"data1": "hoge", "data2": "fuga", "response": response.output_text}
-    # return JsonResponse(json)
 
 @login_required
 def regenerate(request):
-    # if request.method == "POST":
-    #     original_data = request.session.pop('ai_generated_plans', None)
-    #     feedback = request.POST.get("feedback", "").strip()
-
-    #     prompt = Prompt.regenerate_prompt(original_data, feedback)
-
-    #     client = OpenAI(api_key=settings.AI_API_KEY)
-
-    #     #APIを使ってリクエストを投げる
-    #     response = client.responses.create(
-    #         model="gpt-5-nano",
-    #         input=prompt,
-    #         store=True
-    #     )
-
-    #     data = json.loads(response.output_text)
-
-    #     print(data)
-        
-    #     # プランデータをセッションに保存して select へリダイレクト
-    #     request.session['ai_generated_plans'] = data.get('plans', [])
-        
-    #     return redirect('select')
 
     return render(request, "createplan/regenerate.html")
 
@@ -149,13 +99,7 @@ def signin(request):
         email = request.POST.get("email", "").strip()
         password = request.POST.get("password", "").strip()
 
-        print(email, password)
-
-        # authenticateメソッドはemailで認証できないのでカスタムメソッド_authenticate_with_emailで対応
-        # user = authenticate(request, email=email, password=password)  
         user = _authenticate_with_email(email, password)
-
-        print(user)
 
         if user is not None:
             login(request, user)
@@ -187,10 +131,10 @@ def _authenticate_with_email(email, password):
         return user
     return None
 
+
+@login_required
 def form(request):
-    return redirect(
-        
-    )
+    return render(request, 'createplan/form.html')
 
 
 @login_required
@@ -208,51 +152,6 @@ def home(request):
         )
     ).filter(user=request.user)
 
-    # print(plans.first().today_tasks)
-    # plans = Plan.objects.prefetch_related('tasks').filter(user=request.user)
-
-    # plan = Plan.objects.prefetch_related('tasks').filter(user=request.user).first() 
-    # # FIXME 現在選択中のプラン,一時的に最初の要素を取得
-
-    # today = timezone.now().date()
-    # today_task = Task.objects.filter(
-    #     plan=plan,
-    #     plan__user=request.user,
-    #     task_start_date__date__lte=today,
-    #     task_end_date__date__gte=today,
-    # ).order_by('task_start_date').first()
-
-
-    # FIXME 一旦JSONを返す仕様としている
-    # data = []
-
-    # for plan in plans:
-    #     data.append({
-    #         "id": plan.id,
-    #         "plan_name": plan.plan_name,
-    #         "plan_start_date": plan.plan_start_date,
-    #         "plan_end_date": plan.plan_end_date,
-    #         "tasks": [
-    #             {
-    #                 "id": task.id,
-    #                 "genre": task.genre,
-    #                 "title": task.title,
-    #                 "is_active": task.is_active,
-    #                 "task_start_date": task.task_start_date,
-    #                 "task_end_date": task.task_end_date,
-    #             }
-    #             for task in plan.tasks.all()
-    #         ]
-    #     })
-
-    # return JsonResponse(data, safe=False)
-    plan = plans.first()
-
-    if plan:
-        print(plan.today_tasks)
-    else:
-        print(None)
-
     return render(request, 'dashboard/home.html', {
         'plans': plans if plans.exists() else None
     })
@@ -260,7 +159,7 @@ def home(request):
 
 @login_required
 def delete_plan(request, plan_id):
-    plan = Plan.objects.filter(id=plan_id).first()
+    plan = get_object_or_404(Plan, id=plan_id, user=request.user)
     plan.delete()
 
     return redirect('home')
@@ -274,17 +173,11 @@ def select(request):
 
         ai_plans = request.session.pop('ai_generated_plans', None)
 
-        # FIXME 一旦コメントアウト
-        #　if selected_plan_index and ai_plans:　
-        if ai_plans:
+        if selected_plan_index and ai_plans:
             try:
                 # インデックスに対応するプランを取得                
                 selected_index = int(selected_plan_index)
                 selected_plan = ai_plans[selected_index]
-
-                # FIXME: 現状は暫定対応として先頭プラン(index=0)を使用
-                # 本来はフロントから受け取った selected_plan_index を反映する
-                # selected_plan = ai_plans[0]
 
                 request.session['selected_plan'] = selected_plan
 
@@ -292,7 +185,6 @@ def select(request):
 
                 plan = Plan.objects.create(
                     user=user,
-                    #plan_name=selected_plan.get("planname", ""),
                     plan_name=request.session.pop('plan_name', None),
                     plan_start_date=selected_plan["tasks"][0]["task_start_date"],
                     plan_end_date=selected_plan["tasks"][-1]["task_end_date"],
@@ -316,7 +208,6 @@ def select(request):
                 created_tasks = Task.objects.filter(plan=plan)  
                 for task in created_tasks:
                     TaskDetail.objects.create(task=task)
-            # except (json.JSONDecodeError, ValueError, IndexError, KeyError):
             except Exception as e:
                 request.session['selected_plan'] = None
                 print(f"Error: {e}") 
@@ -348,7 +239,6 @@ def select(request):
 @login_required
 def plan_table(request, plan_id):
     plan = Plan.objects.filter(id=plan_id).prefetch_related('tasks').filter(user=request.user).first() 
-    # FIXME 現在選択中のプラン,一時的に最初の要素を取得
 
     today = timezone.now().date()
     today_task = Task.objects.filter(
@@ -358,31 +248,11 @@ def plan_table(request, plan_id):
         task_end_date__date__gte=today,
     ).order_by('task_start_date').first()
 
-    # data = []
-
-    # # for plan in plans:
-    # data.append({
-    #     "id": plan.id,
-    #     "plan_name": plan.plan_name,
-    #     "plan_start_date": plan.plan_start_date,
-    #     "plan_end_date": plan.plan_end_date,
-    #     "tasks": [
-    #         {
-    #             "id": task.id,
-    #             "genre": task.genre,
-    #             "title": task.title,
-    #             "is_active": task.is_active,
-    #             "task_start_date": task.task_start_date,
-    #             "task_end_date": task.task_end_date,
-    #         }
-    #         for task in plan.tasks.all()
-    #     ]
-    # })
-
     return render(request, 'dashboard/plan_table.html', {
         'plan': plan,
         'today_task': today_task
     })
+
 
 @login_required
 def task_detail(request, task_id):
@@ -398,12 +268,8 @@ def task_detail(request, task_id):
 
         return redirect('home')
 
-
-    task = Task.objects.filter(id=task_id).first()
+    task = get_object_or_404(Task, id=task_id, plan__user=request.user)
     
-    print("task!!!!!!!!")
-    print(task)
-
     return render(request, 'dashboard/task_detail.html', {
         'plan': task.plan,
         'task': task
@@ -454,12 +320,6 @@ def api_chart(request, plan_id):
             'understood': round(row['understood'] / total * 100),
         })
 
-    # return render(request, 'dashboard/plan_table.html', {
-    #     'subjects': subjects,
-    #     'data': data,
-    #     'plan_id': plan_id
-    # })
-
     return JsonResponse({
         'subjects': subjects,
         'data': data,
@@ -480,23 +340,17 @@ def link(request):
 
         return redirect('link')
 
-        
-
     plans = Plan.objects.filter(user=request.user)
-    #links = Link.objects.filter(plan_id=plan_id)
 
 
     return render(request, 'dashboard/link.html', {
         'plans': plans
-        # 'links': links
     })
-    # return JsonResponse({
-    #     'links': list(links.values())
-    # })
+
 
 @login_required
 def delete_link(request, link_id):
-    link = Link.objects.filter(id=link_id).first()
+    link = get_object_or_404(Link, id=link_id, plan__user=request.user)
     link.delete()
 
     return redirect('link')

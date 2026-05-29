@@ -28,17 +28,11 @@ handler500 = "core.views.custom_500"
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # path('', core_views.home),
-    path("hoge/", TemplateView.as_view(template_name='hoge.html'), name="hoge"),
-    path("form/", TemplateView.as_view(template_name='createplan/form.html'), name="form"),
+    path("form/", core_views.form, name="form"),
     path("regenerate/", core_views.regenerate, name="regenerate"),
-    #path("select/", TemplateView.as_view(template_name='select.html'), name="select"),
     path("home/", core_views.home, name="home"),
     path("menu/", core_views.menu, name="menu"),
     path("delete_plan/<int:plan_id>", core_views.delete_plan, name="delete_plan"),
-    #path("chart/", TemplateView.as_view(template_name='dashboard/chart.html'), name="chart"),
-    #path("login/", TemplateView.as_view(template_name='login.html'), name="login"),
-    #path("signup/", TemplateView.as_view(template_name='signup.html'), name="signup"),
     path("login/", core_views.signin, name="signin"), # loginという命名だとdjangoの予約語loginと被る
     path("signup/", core_views.signup, name="signup"),
     path("logout/", core_views.signout, name="signout"),
