@@ -16,6 +16,7 @@ from django.contrib import messages
 from django.core import serializers
 from django.db.models import Prefetch, Count, Q
 from django.shortcuts import get_object_or_404
+from django.contrib import messages
 
 
 # Create your views here.
@@ -256,6 +257,9 @@ def plan_table(request, plan_id):
 
 @login_required
 def task_detail(request, task_id):
+
+    task = get_object_or_404(Task, id=task_id, plan__user=request.user)
+
     if request.method == 'POST':
 
         task_detail, created = TaskDetail.objects.update_or_create(
@@ -266,9 +270,8 @@ def task_detail(request, task_id):
             }
         )
 
-        return redirect('home')
+        return redirect('plan_table', task.plan.id)
 
-    task = get_object_or_404(Task, id=task_id, plan__user=request.user)
     
     return render(request, 'dashboard/task_detail.html', {
         'plan': task.plan,

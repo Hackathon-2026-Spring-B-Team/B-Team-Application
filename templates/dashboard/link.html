@@ -31,7 +31,7 @@
         {% for link in plan.links.all %}
             <div class="flex">
                 <div class="flex-1">
-                    <a href="{{ link.url }}" class="mb-3 flex-1 bg-white border-b border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors py-3 font-bold text-center text-sm shadow-sm flex items-center justify-center">
+                    <a href="{{ link.url }}" target="_blank" class="mb-3 flex-1 bg-white border-b border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors py-3 font-bold text-center text-sm shadow-sm flex items-center justify-center">
                         {{ link.link_name }}
                     </a>
                 </div>
