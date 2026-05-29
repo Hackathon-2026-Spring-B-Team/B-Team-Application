@@ -53,6 +53,19 @@ services:
         awslogs-group: HackathonB-Team
         tag: "{{.Name}}.{{.FullID}}"
 
+# 開発環境構築用
+  # db:
+  # image: mysql:8.3   
+  # environment:             
+    # MYSQL_ROOT_PASSWORD: root
+    # MYSQL_DATABASE: django-db
+    # MYSQL_USER: django
+    # MYSQL_PASSWORD: django
+    # TZ: 'Asia/Tokyo'
+  # command: mysqld --character-set-server=utf8 --collation-server=utf8_unicode_ci
+  # ports:
+    # - "3306:3306"
+
 # コンテナ間で静的ファイルを共有する
 volumes:
   static_volume:
