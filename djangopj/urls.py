@@ -20,19 +20,19 @@ from core import views as core_views
 from django.contrib.auth import views as auth_views
 from django.views.generic import TemplateView
 
+# エラーページ
+handler400 = "core.views.custom_400"
+handler403 = "core.views.custom_403"
+handler404 = "core.views.custom_404"
+handler500 = "core.views.custom_500"
+
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', core_views.home),
-    path("hoge/", TemplateView.as_view(template_name='hoge.html'), name="hoge"),
-    path("form/", TemplateView.as_view(template_name='createplan/form.html'), name="form"),
-    # path("select/", TemplateView.as_view(template_name='select.html'), name="select"),
-    path("regenerate/", TemplateView.as_view(template_name='createplan/regenerate.html'), name="regenerate"),
+    path("form/", core_views.form, name="form"),
+    path("regenerate/", core_views.regenerate, name="regenerate"),
     path("home/", core_views.home, name="home"),
     path("menu/", core_views.menu, name="menu"),
     path("delete_plan/<int:plan_id>", core_views.delete_plan, name="delete_plan"),
-    #path("chart/", TemplateView.as_view(template_name='dashboard/chart.html'), name="chart"),
-    #path("login/", TemplateView.as_view(template_name='login.html'), name="login"),
-    #path("signup/", TemplateView.as_view(template_name='signup.html'), name="signup"),
     path("login/", core_views.signin, name="signin"), # loginという命名だとdjangoの予約語loginと被る
     path("signup/", core_views.signup, name="signup"),
     path("logout/", core_views.signout, name="signout"),
@@ -42,6 +42,7 @@ urlpatterns = [
     path("api/chart/<int:plan_id>/", core_views.api_chart, name="api_chart"), # JSONレスポンス用
     path("chart/<int:plan_id>/", core_views.chart, name="chart"), # 描画用
     path("link/", core_views.link, name="link"),
+    path("delete_link/<int:link_id>", core_views.delete_link, name="delete_link"),
 
     # OpenAI API
     path('request_ai_api/', core_views.request_ai_api, name="request_ai_api"),

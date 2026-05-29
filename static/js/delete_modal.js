@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const confirmBtn = document.getElementById('deleteConfirmBtn'); // 削除ボタン
   const modal = document.getElementById('deleteModal'); // モーダル表示中の半透明の黒い背景
   const modalCard = document.getElementById('deleteModalCard'); // モーダルのカード本体
-
+  const deleteForm = document.getElementById('deleteForm'); //デリートフォーム
 
   // モーダルを開く処理
   openBtns.forEach(btn => {
