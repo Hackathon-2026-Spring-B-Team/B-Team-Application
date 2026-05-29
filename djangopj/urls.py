@@ -27,6 +27,7 @@ handler404 = "core.views.custom_404"
 handler500 = "core.views.custom_500"
 
 urlpatterns = [
+    path('', core_views.home),
     path('admin/', admin.site.urls),
     path("form/", core_views.form, name="form"),
     path("regenerate/", core_views.regenerate, name="regenerate"),
