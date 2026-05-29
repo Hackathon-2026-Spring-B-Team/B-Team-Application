@@ -84,7 +84,7 @@ function initializeChart(progressData) {
                     labels: {
                         font: {
                             family: "'BIZ UDPGothic', sans-serif",
-                            size: 14
+                            size: 12
                         },
                         padding: 15,
                         usePointStyle: true
