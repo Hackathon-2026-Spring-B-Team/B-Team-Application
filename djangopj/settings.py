@@ -43,7 +43,7 @@ SECRET_KEY = env('DJANGO_SECRET_KEY')
 DEBUG = False
 
 ALLOWED_HOSTS = [
-    'HackathonB-TeamLB-1856802156.ap-northeast-1.elb.amazonaws.com'
+    env('ALLOWED_HOSTS'),
     ]
 
 

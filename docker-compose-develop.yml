@@ -1,4 +1,15 @@
-services:          
+services:  
+  db:
+    image: mysql:8.3   
+    environment:             
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: django-db
+      MYSQL_USER: django
+      MYSQL_PASSWORD: django
+      TZ: 'Asia/Tokyo'
+    command: mysqld --character-set-server=utf8 --collation-server=utf8_unicode_ci
+    ports:
+      - "3306:3306"        
   web:
     build: 
       # ビルドコンテナはカレントディレクトリ
@@ -19,15 +30,6 @@ services:
     # コンテナ内でポート番号8000使用を宣言
     expose:
       - "8000"
-    # 手動停止以外で停止した場合コンテナ再起動
-    restart: unless-stopped
-    # ロギングドライバ
-    logging:
-      driver: awslogs
-      options:
-        awslogs-region: ap-northeast-1
-        awslogs-group: HackathonB-Team
-        tag: "{{.Name}}.{{.FullID}}"
 
   nginx:
     build:
@@ -43,15 +45,6 @@ services:
       - static_volume:/code/staticfiles
     depends_on:
       - web
-    # 手動停止以外で停止した場合コンテナ再起動
-    restart: unless-stopped
-    # ロギングドライバ
-    logging:
-      driver: awslogs
-      options:
-        awslogs-region: ap-northeast-1
-        awslogs-group: HackathonB-Team
-        tag: "{{.Name}}.{{.FullID}}"
 
 # コンテナ間で静的ファイルを共有する
 volumes:
